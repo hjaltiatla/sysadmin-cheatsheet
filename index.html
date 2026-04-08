@@ -424,15 +424,111 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
 ::-webkit-scrollbar-track { background:transparent }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px }
 
+/* ── Mobile toggle button ────────────────────── */
+.mobile-header {
+  display:none;
+  position:fixed;
+  top:0; left:0; right:0;
+  height:52px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  z-index:200;
+}
+.mobile-logo {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800;
+  font-size:14px;
+  color:var(--text);
+}
+.hamburger {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  width:36px; height:36px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  cursor:pointer;
+  padding:8px;
+}
+.hamburger span {
+  display:block;
+  height:2px;
+  background:var(--text2);
+  border-radius:2px;
+  transition:all .2s;
+}
+.hamburger.open span:nth-child(1) { transform:rotate(45deg) translateY(7px) }
+.hamburger.open span:nth-child(2) { opacity:0 }
+.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translateY(-7px) }
+
+/* ── Overlay ─────────────────────────────────── */
+.sidebar-overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  z-index:149;
+}
+.sidebar-overlay.visible { display:block }
+
 /* ── Responsive ──────────────────────────────── */
 @media (max-width:900px) {
-  .sidebar { width:100%; height:auto; position:static; border-right:none; border-bottom:1px solid var(--border); flex-direction:row; flex-wrap:wrap; overflow-y:visible }
-  .main { margin-left:0; padding:16px }
+  .mobile-header { display:flex }
+
+  .sidebar {
+    top:0; left:-260px;
+    width:260px;
+    height:100vh;
+    transition:left .25s ease;
+    z-index:150;
+    padding-top:52px;
+  }
+  .sidebar.open { left:0 }
+
+  .main {
+    margin-left:0;
+    padding:72px 16px 60px;
+  }
+
   .grid-2, .grid-3 { grid-template-columns:1fr }
+
+  .table-wrap {
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  table { min-width:480px }
+
+  .hero h1 { font-size:26px }
+
+  .section-header p { display:none }
+
+  td.copyable .copy-btn {
+    opacity:1;
+    position:static;
+    transform:none;
+    display:inline-block;
+    margin-left:6px;
+    vertical-align:middle;
+  }
+  td.copyable { padding-right:8px }
 }
 </style>
 </head>
 <body>
+
+<div class="mobile-header">
+  <span class="mobile-logo">SysAdmin Ref</span>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="layout">
 
@@ -1504,7 +1600,28 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
 </div>
 
 <script>
-// ── Theme toggle ────────────────────────────────
+// ── Mobile sidebar toggle ────────────────────────
+const hamburger = document.getElementById('hamburger');
+const sidebar   = document.querySelector('.sidebar');
+const overlay   = document.getElementById('sidebar-overlay');
+
+function toggleSidebar(open) {
+  sidebar.classList.toggle('open', open);
+  hamburger.classList.toggle('open', open);
+  overlay.classList.toggle('visible', open);
+}
+
+hamburger.addEventListener('click', () => toggleSidebar(!sidebar.classList.contains('open')));
+overlay.addEventListener('click', () => toggleSidebar(false));
+
+// Close sidebar when a nav link is tapped on mobile
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) toggleSidebar(false);
+  });
+});
+
+
 const html = document.documentElement;
 const btn  = document.getElementById('theme-btn');
 const lbl  = document.getElementById('theme-label');
