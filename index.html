@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sysadmin Cheatsheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── Variables ───────────────────────────────── */
+:root {
+  --bg:        #F4F6FB;
+  --surface:   #FFFFFF;
+  --surface2:  #EEF2F9;
+  --border:    #DDE3F0;
+  --text:      #0D1117;
+  --text2:     #4A5568;
+  --text3:     #8896B0;
+  --shadow:    0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.04);
+  --radius:    8px;
+
+  --net:    #1D4ED8;
+  --port:   #B45309;
+  --sec:    #B91C1C;
+  --os:     #166534;
+  --log:    #6D28D9;
+  --cert:   #5B21B6;
+  --devops: #0E7490;
+  --dns:    #1E40AF;
+  --cloud:  #4338CA;
+  --res:    #0F766E;
+}
+[data-theme="dark"] {
+  --bg:       #0D1117;
+  --surface:  #161B22;
+  --surface2: #1C2333;
+  --border:   #2D3748;
+  --text:     #E8EDF5;
+  --text2:    #9BA8C0;
+  --text3:    #5C6880;
+  --shadow:   0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
+}
+
+/* ── Reset ───────────────────────────────────── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth; font-size:14px }
+body {
+  font-family:'Instrument Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  transition:background .2s,color .2s;
+}
+a { color:inherit; text-decoration:none }
+
+/* ── Layout ──────────────────────────────────── */
+.layout { display:flex; min-height:100vh }
+
+/* ── Sidebar ─────────────────────────────────── */
+.sidebar {
+  width:228px;
+  flex-shrink:0;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  position:fixed;
+  top:0; left:0;
+  height:100vh;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  z-index:100;
+  padding-bottom:24px;
+}
+.sidebar::-webkit-scrollbar { width:4px }
+.sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px }
+
+.sidebar-brand {
+  padding:20px 16px 14px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-brand .logo-mark {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800;
+  font-size:15px;
+  letter-spacing:-.3px;
+  color:var(--text);
+}
+.sidebar-brand .logo-mark svg {
+  width:22px; height:22px;
+  fill:none;
+  stroke:var(--net);
+  stroke-width:2;
+}
+.sidebar-brand .tagline {
+  font-size:11px;
+  color:var(--text3);
+  margin-top:3px;
+  letter-spacing:.3px;
+}
+
+.search-wrap {
+  padding:12px 12px 8px;
+  position:relative;
+}
+.search-wrap svg {
+  position:absolute;
+  left:21px; top:50%;
+  transform:translateY(-50%);
+  width:14px; height:14px;
+  stroke:var(--text3);
+  stroke-width:2;
+  fill:none;
+  pointer-events:none;
+}
+#search {
+  width:100%;
+  padding:7px 10px 7px 32px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--surface2);
+  color:var(--text);
+  font-family:'Instrument Sans',sans-serif;
+  font-size:12.5px;
+  outline:none;
+  transition:border-color .15s;
+}
+#search::placeholder { color:var(--text3) }
+#search:focus { border-color:var(--net) }
+
+.search-count {
+  font-size:10.5px;
+  color:var(--text3);
+  padding:0 12px 6px;
+  min-height:18px;
+}
+
+.nav-section-label {
+  padding:8px 12px 4px;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.8px;
+  color:var(--text3);
+  text-transform:uppercase;
+}
+.nav-links { list-style:none }
+.nav-links li a {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--text2);
+  border-radius:4px;
+  margin:1px 6px;
+  transition:background .12s, color .12s;
+  cursor:pointer;
+}
+.nav-links li a:hover { background:var(--surface2); color:var(--text) }
+.nav-links li a.active { color:var(--text); background:var(--surface2) }
+.nav-links li a .nav-dot {
+  width:7px; height:7px;
+  border-radius:50%;
+  flex-shrink:0;
+  transition:transform .15s;
+}
+.nav-links li a.active .nav-dot { transform:scale(1.4) }
+
+.sidebar-footer {
+  margin-top:auto;
+  padding:12px;
+  border-top:1px solid var(--border);
+}
+.theme-btn {
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:8px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--surface2);
+  color:var(--text2);
+  font-family:'Instrument Sans',sans-serif;
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .15s;
+}
+.theme-btn:hover { border-color:var(--text3); color:var(--text) }
+
+/* ── Main ────────────────────────────────────── */
+.main {
+  margin-left:228px;
+  flex:1;
+  padding:32px 36px 80px;
+  max-width:1100px;
+}
+
+/* ── Hero ────────────────────────────────────── */
+.hero {
+  padding:32px 0 36px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:40px;
+}
+.hero h1 {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:800;
+  font-size:34px;
+  letter-spacing:-1px;
+  line-height:1.1;
+  color:var(--text);
+}
+.hero h1 span { color:var(--net) }
+.hero p {
+  margin-top:8px;
+  color:var(--text2);
+  font-size:14px;
+  letter-spacing:.2px;
+}
+.hero-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:16px;
+}
+.pill {
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.3px;
+  background:var(--surface2);
+  color:var(--text2);
+  border:1px solid var(--border);
+}
+
+/* ── Sections ────────────────────────────────── */
+.section { margin-bottom:56px }
+.section-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+  padding-bottom:12px;
+  border-bottom:2px solid var(--border);
+  position:relative;
+}
+.section-header::before {
+  content:'';
+  position:absolute;
+  bottom:-2px; left:0;
+  width:48px; height:2px;
+  background:var(--sec-color, var(--net));
+  border-radius:1px;
+}
+.section-num {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px; height:28px;
+  border-radius:8px;
+  background:var(--sec-color, var(--net));
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  flex-shrink:0;
+}
+.section-header h2 {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:700;
+  font-size:19px;
+  letter-spacing:-.4px;
+  color:var(--text);
+}
+.section-header p {
+  margin-left:auto;
+  font-size:11.5px;
+  color:var(--text3);
+  letter-spacing:.2px;
+}
+
+/* ── Subsection headings ─────────────────────── */
+.sub-heading {
+  font-family:'Bricolage Grotesque',sans-serif;
+  font-weight:600;
+  font-size:13px;
+  color:var(--sec-color, var(--net));
+  letter-spacing:.2px;
+  margin:20px 0 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.sub-heading::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+  margin-left:6px;
+}
+
+/* ── Two-col grid ────────────────────────────── */
+.grid-2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  align-items:start;
+}
+.grid-3 {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+/* ── Tables ──────────────────────────────────── */
+.table-wrap {
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:12.5px;
+}
+thead tr {
+  background:var(--sec-color, var(--net));
+  color:#fff;
+}
+thead th {
+  padding:9px 12px;
+  text-align:left;
+  font-weight:600;
+  font-size:11.5px;
+  letter-spacing:.3px;
+  white-space:nowrap;
+}
+tbody tr { transition:background .1s }
+tbody tr:nth-child(odd)  { background:var(--surface) }
+tbody tr:nth-child(even) { background:var(--surface2) }
+tbody tr:hover { background:color-mix(in srgb, var(--sec-color,var(--net)) 8%, var(--surface)) }
+.hidden-row { display:none }
+tbody td {
+  padding:8px 12px;
+  color:var(--text);
+  vertical-align:top;
+  border-top:1px solid var(--border);
+}
+tbody td:first-child { font-weight:500 }
+.highlight { background:color-mix(in srgb,#FBBF24 35%,transparent) !important }
+
+/* ── Code / command cells ────────────────────── */
+.cmd, code {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;
+  background:color-mix(in srgb,var(--sec-color,var(--net)) 10%,var(--surface2));
+  color:var(--sec-color,var(--net));
+  padding:2px 6px;
+  border-radius:4px;
+  display:inline-block;
+  max-width:100%;
+  word-break:break-all;
+}
+[data-theme="dark"] .cmd, [data-theme="dark"] code {
+  background:color-mix(in srgb,var(--sec-color,var(--net)) 15%,var(--surface2));
+}
+
+/* ── Copy button ─────────────────────────────── */
+td.copyable { position:relative; cursor:pointer }
+td.copyable .copy-btn {
+  position:absolute;
+  right:6px; top:50%;
+  transform:translateY(-50%);
+  opacity:0;
+  transition:opacity .15s;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:2px 6px;
+  font-size:10px;
+  color:var(--text3);
+  cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;
+  line-height:1.6;
+  white-space:nowrap;
+}
+td.copyable:hover .copy-btn { opacity:1 }
+td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
+
+/* ── Tag badges ──────────────────────────────── */
+.badge {
+  display:inline-block;
+  padding:1px 7px;
+  border-radius:10px;
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.2px;
+}
+.badge-do   { background:#DCFCE7; color:#166534 }
+.badge-dont { background:#FEE2E2; color:#B91C1C }
+.badge-you  { background:#DBEAFE; color:#1E40AF }
+.badge-prov { background:#E0E7FF; color:#4338CA }
+.badge-shared { background:#FEF3C7; color:#92400E }
+
+/* ── No results ──────────────────────────────── */
+.no-results {
+  text-align:center;
+  padding:32px;
+  color:var(--text3);
+  font-size:13px;
+  display:none;
+}
+
+/* ── Scrollbar ───────────────────────────────── */
+::-webkit-scrollbar { width:6px; height:6px }
+::-webkit-scrollbar-track { background:transparent }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px }
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width:900px) {
+  .sidebar { width:100%; height:auto; position:static; border-right:none; border-bottom:1px solid var(--border); flex-direction:row; flex-wrap:wrap; overflow-y:visible }
+  .main { margin-left:0; padding:16px }
+  .grid-2, .grid-3 { grid-template-columns:1fr }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ══ SIDEBAR ══════════════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      SysAdmin Ref
+    </div>
+    <div class="tagline">Network · Security · OS · Cloud</div>
+  </div>
+
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" id="search" placeholder="Search commands, ports, concepts…" autocomplete="off">
+  </div>
+  <div class="search-count" id="search-count"></div>
+
+  <div class="nav-section-label">Sections</div>
+  <ul class="nav-links">
+    <li><a href="#networking"  class="nav-link"><span class="nav-dot" style="background:var(--net)"></span>① Networking</a></li>
+    <li><a href="#cidr"        class="nav-link"><span class="nav-dot" style="background:var(--net)"></span>② CIDR &amp; Subnets</a></li>
+    <li><a href="#ports"       class="nav-link"><span class="nav-dot" style="background:var(--port)"></span>③ Ports &amp; VPN</a></li>
+    <li><a href="#security"    class="nav-link"><span class="nav-dot" style="background:var(--sec)"></span>④ Security</a></li>
+    <li><a href="#os"          class="nav-link"><span class="nav-dot" style="background:var(--os)"></span>⑤ OS &amp; Commands</a></li>
+    <li><a href="#logs"        class="nav-link"><span class="nav-dot" style="background:var(--log)"></span>⑥ Logs &amp; Monitoring</a></li>
+    <li><a href="#certs"       class="nav-link"><span class="nav-dot" style="background:var(--cert)"></span>⑦ Certs &amp; Firewall</a></li>
+    <li><a href="#devops"      class="nav-link"><span class="nav-dot" style="background:var(--devops)"></span>⑧ DevOps Tools</a></li>
+    <li><a href="#netdive"     class="nav-link"><span class="nav-dot" style="background:var(--dns)"></span>⑨ Net Deep Dive</a></li>
+    <li><a href="#cloud"       class="nav-link"><span class="nav-dot" style="background:var(--cloud)"></span>⑩ Cloud: AWS &amp; Azure</a></li>
+    <li><a href="#resources"   class="nav-link"><span class="nav-dot" style="background:var(--res)"></span>⑪ Resources &amp; Tools</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <button class="theme-btn" id="theme-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span id="theme-label">Dark mode</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══ MAIN ════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Sysadmin <span>Cheatsheet</span></h1>
+  </div>
+
+  <!-- ① NETWORKING ──────────────────────────── -->
+  <section class="section" id="networking" style="--sec-color:var(--net)">
+    <div class="section-header">
+      <span class="section-num">①</span>
+      <h2>Networking Fundamentals</h2>
+      <p>OSI · IPv4 · TCP/UDP · DNS</p>
+    </div>
+
+    <div class="sub-heading">OSI Model</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Layer</th><th>Protocol / Tech</th><th>Key Role</th></tr></thead>
+        <tbody>
+          <tr><td>7</td><td>Application</td><td>HTTP, FTP, DNS, SMTP, SNMP</td><td>User-facing data exchange</td></tr>
+          <tr><td>6</td><td>Presentation</td><td>SSL/TLS, JPEG, ASCII</td><td>Encoding, encryption, compression</td></tr>
+          <tr><td>5</td><td>Session</td><td>NetBIOS, RPC, PPTP</td><td>Open/maintain/close sessions</td></tr>
+          <tr><td>4</td><td>Transport</td><td>TCP, UDP</td><td>Segmentation, ports, reliability</td></tr>
+          <tr><td>3</td><td>Network</td><td>IP, ICMP, OSPF, BGP</td><td>Logical addressing, routing</td></tr>
+          <tr><td>2</td><td>Data Link</td><td>Ethernet, MAC, ARP, VLANs</td><td>Physical addressing, framing</td></tr>
+          <tr><td>1</td><td>Physical</td><td>Cables, hubs, bits, NICs</td><td>Raw bit transmission</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">IPv4 Address Ranges</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Range</th><th>Type</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>10.0.0.0/8</code></td><td>Private</td><td>Class A, large networks</td></tr>
+              <tr><td><code>172.16.0.0/12</code></td><td>Private</td><td>Class B (172.16-31.x)</td></tr>
+              <tr><td><code>192.168.0.0/16</code></td><td>Private</td><td>Class C, home/SOHO</td></tr>
+              <tr><td><code>127.0.0.0/8</code></td><td>Loopback</td><td>127.0.0.1 = localhost</td></tr>
+              <tr><td><code>169.254.0.0/16</code></td><td>APIPA</td><td>Auto-assigned when DHCP fails</td></tr>
+              <tr><td><code>224.0.0.0/4</code></td><td>Multicast</td><td>One-to-many delivery</td></tr>
+              <tr><td><code>0.0.0.0</code></td><td>Unspecified</td><td>Default route / all interfaces</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">DNS Record Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Record</th><th>Purpose</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>A</td><td>IPv4 address</td><td>example.com → 93.184.216.34</td></tr>
+              <tr><td>AAAA</td><td>IPv6 address</td><td>example.com → 2606:…</td></tr>
+              <tr><td>CNAME</td><td>Canonical alias</td><td>www → example.com</td></tr>
+              <tr><td>MX</td><td>Mail server</td><td>Priority + mail host</td></tr>
+              <tr><td>NS</td><td>Nameservers</td><td>Delegates zone authority</td></tr>
+              <tr><td>TXT</td><td>Text data</td><td>SPF, DKIM, site verification</td></tr>
+              <tr><td>SOA</td><td>Zone authority</td><td>Primary NS, serial, TTLs</td></tr>
+              <tr><td>PTR</td><td>Reverse DNS</td><td>IP → hostname lookup</td></tr>
+              <tr><td>SRV</td><td>Service location</td><td>_sip._tcp.example.com</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">TCP vs UDP</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Property</th><th>TCP</th><th>UDP</th></tr></thead>
+        <tbody>
+          <tr><td>Connection</td><td>Connection-oriented (3-way handshake)</td><td>Connectionless, no handshake</td></tr>
+          <tr><td>Reliability</td><td>Guaranteed delivery, retransmits lost packets</td><td>Best-effort, packets may be lost</td></tr>
+          <tr><td>Ordering</td><td>Sequenced delivery guaranteed</td><td>Out-of-order delivery possible</td></tr>
+          <tr><td>Speed</td><td>Slower (overhead from acks, windowing)</td><td>Faster, minimal overhead</td></tr>
+          <tr><td>Use cases</td><td>HTTP/S, SSH, FTP, SMTP, RDP, databases</td><td>DNS, DHCP, VoIP, video streams, NTP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ② CIDR ────────────────────────────────── -->
+  <section class="section" id="cidr" style="--sec-color:var(--net)">
+    <div class="section-header">
+      <span class="section-num">②</span>
+      <h2>CIDR &amp; Subnets</h2>
+      <p>Subnet masks · Host counts · Block sizes</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>CIDR</th><th>Subnet Mask</th><th>Hosts</th><th>Block Size</th><th>Example / Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>/8</code></td><td>255.0.0.0</td><td>16,777,214</td><td>16M</td><td>10.0.0.0/8 - large org</td></tr>
+          <tr><td><code>/16</code></td><td>255.255.0.0</td><td>65,534</td><td>64K</td><td>172.16.0.0/16 - campus</td></tr>
+          <tr><td><code>/20</code></td><td>255.255.240.0</td><td>4,094</td><td>4K</td><td>AWS default VPC subnets</td></tr>
+          <tr><td><code>/24</code></td><td>255.255.255.0</td><td>254</td><td>256</td><td>192.168.1.0/24 - typical LAN</td></tr>
+          <tr><td><code>/25</code></td><td>255.255.255.128</td><td>126</td><td>128</td><td>192.168.1.0/25 - split /24 in half</td></tr>
+          <tr><td><code>/26</code></td><td>255.255.255.192</td><td>62</td><td>64</td><td>192.168.1.0/26 - quarter of a /24</td></tr>
+          <tr><td><code>/27</code></td><td>255.255.255.224</td><td>30</td><td>32</td><td>192.168.1.0/27 - small dept segment</td></tr>
+          <tr><td><code>/28</code></td><td>255.255.255.240</td><td>14</td><td>16</td><td>192.168.1.0/28 - server cluster</td></tr>
+          <tr><td><code>/29</code></td><td>255.255.255.248</td><td>6</td><td>8</td><td>Point-to-point link</td></tr>
+          <tr><td><code>/30</code></td><td>255.255.255.252</td><td>2</td><td>4</td><td>Router-to-router link</td></tr>
+          <tr><td><code>/31</code></td><td>255.255.255.254</td><td>2</td><td>2</td><td>RFC 3021 p2p (no broadcast)</td></tr>
+          <tr><td><code>/32</code></td><td>255.255.255.255</td><td>1</td><td>1</td><td>Single host route / loopback</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--text3);margin-top:8px;">Tip: Usable hosts = 2<sup>n</sup> - 2 (subtract network + broadcast). /31 is the exception (RFC 3021).</p>
+  </section>
+
+  <!-- ③ PORTS & VPN ──────────────────────────── -->
+  <section class="section" id="ports" style="--sec-color:var(--port)">
+    <div class="section-header">
+      <span class="section-num">③</span>
+      <h2>Ports &amp; VPN Technologies</h2>
+      <p>Well-known ports · VPN protocols</p>
+    </div>
+
+    <div class="sub-heading">Well-Known Ports</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Port(s)</th><th>Protocol</th><th>Service</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>20 / 21</td><td>TCP</td><td>FTP</td><td>20=data, 21=control. Use SFTP/FTPS instead</td></tr>
+          <tr><td>22</td><td>TCP</td><td>SSH / SFTP / SCP</td><td>Secure remote shell and file transfer</td></tr>
+          <tr><td>23</td><td>TCP</td><td>Telnet</td><td>Plaintext - disable, use SSH</td></tr>
+          <tr><td>25</td><td>TCP</td><td>SMTP</td><td>Mail relay between servers</td></tr>
+          <tr><td>53</td><td>TCP/UDP</td><td>DNS</td><td>UDP for queries, TCP for zone transfers/large</td></tr>
+          <tr><td>67 / 68</td><td>UDP</td><td>DHCP</td><td>67=server, 68=client</td></tr>
+          <tr><td>80</td><td>TCP</td><td>HTTP</td><td>Unencrypted web - redirect to 443</td></tr>
+          <tr><td>88</td><td>TCP/UDP</td><td>Kerberos</td><td>Authentication in AD environments</td></tr>
+          <tr><td>110</td><td>TCP</td><td>POP3</td><td>Email retrieval - use POP3S (995)</td></tr>
+          <tr><td>123</td><td>UDP</td><td>NTP</td><td>Time sync - critical for Kerberos/logs</td></tr>
+          <tr><td>143</td><td>TCP</td><td>IMAP</td><td>Email access - use IMAPS (993)</td></tr>
+          <tr><td>161 / 162</td><td>UDP</td><td>SNMP</td><td>161=poll, 162=trap. Use v3 with auth</td></tr>
+          <tr><td>389</td><td>TCP/UDP</td><td>LDAP</td><td>Directory services - use LDAPS (636)</td></tr>
+          <tr><td>443</td><td>TCP</td><td>HTTPS</td><td>HTTP over TLS. Also used by some VPNs</td></tr>
+          <tr><td>445</td><td>TCP</td><td>SMB</td><td>Windows file shares - block at perimeter</td></tr>
+          <tr><td>465 / 587</td><td>TCP</td><td>SMTPS / SMTP-TLS</td><td>Encrypted mail submission</td></tr>
+          <tr><td>514</td><td>UDP</td><td>Syslog</td><td>Log forwarding - use TLS syslog (6514)</td></tr>
+          <tr><td>636</td><td>TCP</td><td>LDAPS</td><td>LDAP over TLS</td></tr>
+          <tr><td>993</td><td>TCP</td><td>IMAPS</td><td>IMAP over TLS</td></tr>
+          <tr><td>995</td><td>TCP</td><td>POP3S</td><td>POP3 over TLS</td></tr>
+          <tr><td>1433</td><td>TCP</td><td>MS SQL Server</td><td>Default SQL Server port</td></tr>
+          <tr><td>1521</td><td>TCP</td><td>Oracle DB</td><td>Oracle database listener</td></tr>
+          <tr><td>3306</td><td>TCP</td><td>MySQL / MariaDB</td><td>Common web app database port</td></tr>
+          <tr><td>3389</td><td>TCP</td><td>RDP</td><td>Remote Desktop - never expose to internet</td></tr>
+          <tr><td>5432</td><td>TCP</td><td>PostgreSQL</td><td>Default Postgres port</td></tr>
+          <tr><td>5900</td><td>TCP</td><td>VNC</td><td>Remote desktop - use only over VPN/tunnel</td></tr>
+          <tr><td>6379</td><td>TCP</td><td>Redis</td><td>No auth by default - bind to localhost</td></tr>
+          <tr><td>8080 / 8443</td><td>TCP</td><td>HTTP/S Alt</td><td>Dev servers, proxies, alt web services</td></tr>
+          <tr><td>27017</td><td>TCP</td><td>MongoDB</td><td>No auth by default - secure before exposing</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:24px">VPN Technologies</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Protocol</th><th>Port(s)</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>IPSec / IKEv2</td><td>ESP / IKE</td><td>UDP 500 / 4500</td><td>Fast, native on most OS, preferred for site-to-site</td></tr>
+          <tr><td>OpenVPN</td><td>TLS</td><td>UDP/TCP 1194</td><td>Flexible, open-source, common for remote access</td></tr>
+          <tr><td>WireGuard</td><td>UDP</td><td>51820</td><td>Modern, minimal code, fastest throughput</td></tr>
+          <tr><td>SSL VPN</td><td>HTTPS</td><td>TCP 443</td><td>Works through firewalls, browser or client-based</td></tr>
+          <tr><td>L2TP/IPSec</td><td>L2TP + ESP</td><td>UDP 1701 / 500 / 4500</td><td>Common legacy, double-encapsulation overhead; 4500 for NAT-T</td></tr>
+          <tr><td>PPTP</td><td>GRE + TCP</td><td>TCP 1723</td><td>Obsolete - broken crypto, avoid</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ④ SECURITY ─────────────────────────────── -->
+  <section class="section" id="security" style="--sec-color:var(--sec)">
+    <div class="section-header">
+      <span class="section-num">④</span>
+      <h2>Security, Threats &amp; Hardening</h2>
+      <p>Attacks · Hardening · Crypto · Auth</p>
+    </div>
+
+    <div class="sub-heading">Threat / Attack Reference</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Category</th><th>Attack</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Phishing</td><td>Phishing / Spear / Whaling</td><td>Fraudulent emails targeting all users / specific individuals / executives</td></tr>
+          <tr><td>Phishing</td><td>Vishing / Smishing</td><td>Voice call or SMS-based social engineering</td></tr>
+          <tr><td>Web App</td><td>SQL Injection</td><td>Malicious SQL inserted into input fields to query or corrupt the DB</td></tr>
+          <tr><td>Web App</td><td>XSS (Cross-Site Scripting)</td><td>Injected scripts execute in victim's browser via a trusted site</td></tr>
+          <tr><td>Web App</td><td>CSRF</td><td>Forged request tricks authenticated user into unwanted action</td></tr>
+          <tr><td>Web App</td><td>IDOR</td><td>Accessing objects by changing an ID in the URL/request</td></tr>
+          <tr><td>Malware</td><td>Ransomware</td><td>Encrypts files, demands payment for key</td></tr>
+          <tr><td>Malware</td><td>Rootkit</td><td>Hides malware presence at OS/kernel level</td></tr>
+          <tr><td>Malware</td><td>Keylogger</td><td>Records keystrokes to capture credentials</td></tr>
+          <tr><td>Network</td><td>MITM</td><td>Attacker intercepts communication between two parties</td></tr>
+          <tr><td>Network</td><td>ARP Spoofing</td><td>Links attacker MAC to legitimate IP to intercept LAN traffic</td></tr>
+          <tr><td>Network</td><td>DDoS / SYN Flood</td><td>Overwhelm target with traffic / half-open TCP connections</td></tr>
+          <tr><td>Social Eng.</td><td>Pretexting / Tailgating</td><td>Fabricated scenario to obtain info / following into secure area</td></tr>
+          <tr><td>Insider</td><td>Privilege Escalation</td><td>Exploiting vuln or misconfiguration to gain higher access</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">Hardening Checklist</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th></th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Disable unused ports and services</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Enable MFA / 2FA on all accounts</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Apply least privilege (PoLP) everywhere</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Patch OS within 30 days of release</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Enable host-based firewall (UFW/iptables)</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Use key-based SSH auth, disable password auth</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Disable root SSH login (PermitRootLogin no)</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Encrypt data at rest and in transit</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Log and monitor all auth events</td></tr>
+              <tr><td><span class="badge badge-dont">DON'T</span></td><td>Use default credentials on any device</td></tr>
+              <tr><td><span class="badge badge-dont">DON'T</span></td><td>Run services as root unnecessarily</td></tr>
+              <tr><td><span class="badge badge-dont">DON'T</span></td><td>Expose RDP / management ports to internet</td></tr>
+              <tr><td><span class="badge badge-dont">DON'T</span></td><td>Disable SELinux/AppArmor without a plan</td></tr>
+              <tr><td><span class="badge badge-dont">DON'T</span></td><td>Store plaintext credentials in scripts/repos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">Cryptography Algorithms</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Algorithm</th><th>Type</th><th>Key Size / Notes</th></tr></thead>
+            <tbody>
+              <tr><td>AES-256</td><td>Symmetric</td><td>256-bit. NIST standard, fastest for bulk data</td></tr>
+              <tr><td>ChaCha20</td><td>Symmetric</td><td>Stream cipher, faster than AES on mobile</td></tr>
+              <tr><td>RSA</td><td>Asymmetric</td><td>2048+ min (4096 recommended for long-term)</td></tr>
+              <tr><td>ECDSA / ECDH</td><td>Asymmetric</td><td>ECC - same security as RSA with shorter keys</td></tr>
+              <tr><td>Ed25519</td><td>Asymmetric</td><td>Preferred for SSH keys, fast and secure</td></tr>
+              <tr><td>SHA-256 / SHA-3</td><td>Hash</td><td>Use for integrity checks, digital signatures</td></tr>
+              <tr><td>bcrypt / Argon2</td><td>Password hash</td><td>Argon2 is winner of Password Hashing Competition</td></tr>
+              <tr><td>TLS 1.3</td><td>Protocol</td><td>Only version to use - 1.0/1.1 deprecated, 1.2 legacy</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">Authentication Methods</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td>Password + MFA/TOTP</td><td>Baseline for all user accounts</td></tr>
+              <tr><td>SSH Key Pairs (Ed25519)</td><td>Server access, CI/CD pipelines</td></tr>
+              <tr><td>PKI / X.509 Certificates</td><td>TLS, client auth, code signing</td></tr>
+              <tr><td>OAuth 2.0 / OIDC</td><td>Web app delegation, "Sign in with Google"</td></tr>
+              <tr><td>SAML 2.0</td><td>Enterprise SSO, IdP federation</td></tr>
+              <tr><td>Kerberos</td><td>Active Directory authentication (tickets)</td></tr>
+              <tr><td>RADIUS</td><td>Network access (WiFi 802.1X, VPN auth)</td></tr>
+              <tr><td>LDAP / Active Directory</td><td>Centralized user/group directory</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ OS & COMMANDS ───────────────────────── -->
+  <section class="section" id="os" style="--sec-color:var(--os)">
+    <div class="section-header">
+      <span class="section-num">⑤</span>
+      <h2>OS &amp; Commands</h2>
+      <p>Linux · Windows/PS · Storage · RAID · Backup</p>
+    </div>
+
+    <div class="sub-heading">Linux - Process &amp; Performance</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>top / htop</code><button class="copy-btn">copy</button></td><td>Real-time process monitor. htop is interactive</td></tr>
+          <tr><td class="copyable"><code>ps aux</code><button class="copy-btn">copy</button></td><td>All processes with user and CPU/mem usage</td></tr>
+          <tr><td class="copyable"><code>ps aux | grep nginx</code><button class="copy-btn">copy</button></td><td>Find process by name</td></tr>
+          <tr><td class="copyable"><code>kill -9 &lt;PID&gt;</code><button class="copy-btn">copy</button></td><td>Force-kill process by PID (SIGKILL)</td></tr>
+          <tr><td class="copyable"><code>pkill -f nginx</code><button class="copy-btn">copy</button></td><td>Kill all processes matching name pattern</td></tr>
+          <tr><td class="copyable"><code>systemctl status sshd</code><button class="copy-btn">copy</button></td><td>Check service status (systemd)</td></tr>
+          <tr><td class="copyable"><code>systemctl restart nginx</code><button class="copy-btn">copy</button></td><td>Restart a systemd service</td></tr>
+          <tr><td class="copyable"><code>systemctl enable nginx</code><button class="copy-btn">copy</button></td><td>Enable service to start on boot</td></tr>
+          <tr><td class="copyable"><code>journalctl -u nginx -f</code><button class="copy-btn">copy</button></td><td>Follow systemd logs for a service</td></tr>
+          <tr><td class="copyable"><code>free -h</code><button class="copy-btn">copy</button></td><td>Memory usage in human-readable format</td></tr>
+          <tr><td class="copyable"><code>vmstat 1</code><button class="copy-btn">copy</button></td><td>CPU/IO/memory stats every 1 second</td></tr>
+          <tr><td class="copyable"><code>uptime</code><button class="copy-btn">copy</button></td><td>System uptime and load averages (1/5/15 min)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:16px">Linux - Networking &amp; Firewall</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>ip addr show</code><button class="copy-btn">copy</button></td><td>Show all network interfaces and IP addresses</td></tr>
+          <tr><td class="copyable"><code>ip route show</code><button class="copy-btn">copy</button></td><td>Display routing table</td></tr>
+          <tr><td class="copyable"><code>ss -tulnp</code><button class="copy-btn">copy</button></td><td>TCP/UDP listening ports with process names</td></tr>
+          <tr><td class="copyable"><code>netstat -tulnp</code><button class="copy-btn">copy</button></td><td>Listening ports (legacy, use ss on modern systems)</td></tr>
+          <tr><td class="copyable"><code>ping -c 4 8.8.8.8</code><button class="copy-btn">copy</button></td><td>Test connectivity (4 packets)</td></tr>
+          <tr><td class="copyable"><code>traceroute 8.8.8.8</code><button class="copy-btn">copy</button></td><td>Trace route hops to destination</td></tr>
+          <tr><td class="copyable"><code>nmap -sV -p 1-1000 &lt;IP&gt;</code><button class="copy-btn">copy</button></td><td>Scan top 1000 ports with service version</td></tr>
+          <tr><td class="copyable"><code>dig example.com A</code><button class="copy-btn">copy</button></td><td>DNS lookup for A record</td></tr>
+          <tr><td class="copyable"><code>curl -I https://example.com</code><button class="copy-btn">copy</button></td><td>Fetch HTTP response headers only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:16px">Linux - Files, Permissions &amp; Users</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>chmod 755 file</code><button class="copy-btn">copy</button></td><td>rwxr-xr-x - owner full, group/other read+exec</td></tr>
+          <tr><td class="copyable"><code>chmod u+x script.sh</code><button class="copy-btn">copy</button></td><td>Add execute permission for owner</td></tr>
+          <tr><td class="copyable"><code>chown user:group file</code><button class="copy-btn">copy</button></td><td>Change file owner and group</td></tr>
+          <tr><td class="copyable"><code>find / -perm -4000</code><button class="copy-btn">copy</button></td><td>Find all SUID binaries (privilege escalation risk)</td></tr>
+          <tr><td class="copyable"><code>useradd -m -s /bin/bash u</code><button class="copy-btn">copy</button></td><td>Create user with home dir and bash shell</td></tr>
+          <tr><td class="copyable"><code>usermod -aG sudo username</code><button class="copy-btn">copy</button></td><td>Add user to sudo group</td></tr>
+          <tr><td class="copyable"><code>passwd username</code><button class="copy-btn">copy</button></td><td>Set or change user password</td></tr>
+          <tr><td class="copyable"><code>grep -r "error" /var/log/</code><button class="copy-btn">copy</button></td><td>Recursively search logs for "error"</td></tr>
+          <tr><td class="copyable"><code>tail -f /var/log/syslog</code><button class="copy-btn">copy</button></td><td>Follow log file in real-time</td></tr>
+          <tr><td class="copyable"><code>df -h</code><button class="copy-btn">copy</button></td><td>Disk usage by filesystem in human-readable</td></tr>
+          <tr><td class="copyable"><code>du -sh /var/log/*</code><button class="copy-btn">copy</button></td><td>Size of each item in /var/log</td></tr>
+          <tr><td class="copyable"><code>tar -czf out.tar.gz /dir</code><button class="copy-btn">copy</button></td><td>Create gzipped tarball of directory</td></tr>
+          <tr><td class="copyable"><code>rsync -avz src/ dest/</code><button class="copy-btn">copy</button></td><td>Sync files with verbose output and compression</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Linux Filesystem Hierarchy</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Path</th><th>What Lives Here</th></tr></thead>
+        <tbody>
+          <tr><td><code>/</code></td><td>Root of the entire filesystem tree - everything hangs off here</td></tr>
+          <tr><td><code>/bin</code></td><td>Essential user binaries (ls, cp, mv, bash) needed before /usr is mounted</td></tr>
+          <tr><td><code>/sbin</code></td><td>Essential system binaries for root (fdisk, ifconfig, init, fsck)</td></tr>
+          <tr><td><code>/usr</code></td><td>Read-only user data: most installed apps, libraries, and docs go here</td></tr>
+          <tr><td><code>/usr/bin</code></td><td>Non-essential user commands (gcc, python3, git, curl, vim)</td></tr>
+          <tr><td><code>/usr/local</code></td><td>Locally compiled or admin-installed software - not managed by the package manager</td></tr>
+          <tr><td><code>/etc</code></td><td>System-wide configuration files (/etc/ssh/sshd_config, /etc/hosts, /etc/cron.d)</td></tr>
+          <tr><td><code>/var</code></td><td>Variable data that grows: logs (/var/log), mail, spool, databases, package cache</td></tr>
+          <tr><td><code>/var/log</code></td><td>System and service logs (syslog, auth.log, dmesg, journald writes here)</td></tr>
+          <tr><td><code>/tmp</code></td><td>Temporary files - cleared on reboot, world-writable, no exec in hardened configs</td></tr>
+          <tr><td><code>/home</code></td><td>User home directories (/home/alice). Root's home is /root, not here</td></tr>
+          <tr><td><code>/root</code></td><td>Home directory for the root account</td></tr>
+          <tr><td><code>/dev</code></td><td>Device files: disks (/dev/sda), terminals (/dev/tty), null (/dev/null)</td></tr>
+          <tr><td><code>/proc</code></td><td>Virtual FS exposing kernel and process info (/proc/cpuinfo, /proc/meminfo)</td></tr>
+          <tr><td><code>/sys</code></td><td>Virtual FS for kernel devices and drivers - used by udev and hardware management</td></tr>
+          <tr><td><code>/boot</code></td><td>Kernel images, initramfs, and GRUB config - keep separate partition for safety</td></tr>
+          <tr><td><code>/lib</code></td><td>Shared libraries needed by /bin and /sbin at boot</td></tr>
+          <tr><td><code>/opt</code></td><td>Optional third-party software installed as self-contained packages (e.g. /opt/splunk)</td></tr>
+          <tr><td><code>/mnt</code></td><td>Temporary mount point for manually mounted filesystems</td></tr>
+          <tr><td><code>/media</code></td><td>Auto-mount point for removable media (USB drives, DVDs)</td></tr>
+          <tr><td><code>/srv</code></td><td>Service data served to the network (web root, FTP files)</td></tr>
+          <tr><td><code>/run</code></td><td>Runtime data since last boot: PID files, sockets, lock files (tmpfs)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Windows Filesystem Hierarchy</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Drive-letter based (C:, D:). NTFS is standard - supports permissions, ACLs, compression, and encryption.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Path</th><th>What Lives Here</th></tr></thead>
+        <tbody>
+          <tr><td><code>C:\</code></td><td>Root of the drive - each volume has its own root under a drive letter</td></tr>
+          <tr><td><code>C:\Windows</code></td><td>OS root containing system binaries, configuration files, and critical subdirectories</td></tr>
+          <tr><td><code>C:\Windows\System32</code></td><td>64-bit system executables, DLLs, and management tools (cmd.exe, notepad.exe, etc.)</td></tr>
+          <tr><td><code>C:\Windows\SysWOW64</code></td><td>32-bit system binaries for backward compatibility on 64-bit Windows</td></tr>
+          <tr><td><code>C:\Windows\System32\drivers</code></td><td>Kernel-mode drivers (.sys files) loaded at boot</td></tr>
+          <tr><td><code>C:\Windows\Temp</code></td><td>System-wide temporary files - safe to clear periodically</td></tr>
+          <tr><td><code>C:\Program Files</code></td><td>Default install directory for 64-bit applications</td></tr>
+          <tr><td><code>C:\Program Files (x86)</code></td><td>Default install directory for 32-bit applications on 64-bit Windows</td></tr>
+          <tr><td><code>C:\ProgramData</code></td><td>System-wide app data and config shared across all users (hidden by default)</td></tr>
+          <tr><td><code>C:\Users\Public</code></td><td>Shared folder accessible to all local users</td></tr>
+          <tr><td><code>C:\Users\%USERNAME%</code></td><td>Per-user profile root - contains all personal folders and app data</td></tr>
+          <tr><td><code>...\AppData\Roaming</code></td><td>Per-user config that follows domain profiles (Outlook, VS Code settings, etc.)</td></tr>
+          <tr><td><code>...\AppData\Local</code></td><td>Local-only app data: cache, application state, Temp subfolder</td></tr>
+          <tr><td><code>...\AppData\Local\Temp</code></td><td>User-specific temp files - a common target for malware drops</td></tr>
+          <tr><td><code>...\Desktop / Downloads</code></td><td>Standard personal folders inside each user profile</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">Windows / PowerShell</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>Get-Process</code><button class="copy-btn">copy</button></td><td>List all running processes (PS)</td></tr>
+              <tr><td class="copyable"><code>Stop-Process -Name notepad</code><button class="copy-btn">copy</button></td><td>Kill process by name (PS)</td></tr>
+              <tr><td class="copyable"><code>Get-Service | Where Status -eq Running</code><button class="copy-btn">copy</button></td><td>List only running services (PS)</td></tr>
+              <tr><td class="copyable"><code>systeminfo</code><button class="copy-btn">copy</button></td><td>OS version, RAM, hotfixes, uptime</td></tr>
+              <tr><td class="copyable"><code>net user /domain</code><button class="copy-btn">copy</button></td><td>List domain users</td></tr>
+              <tr><td class="copyable"><code>net localgroup administrators</code><button class="copy-btn">copy</button></td><td>List local admins</td></tr>
+              <tr><td class="copyable"><code>Get-HotFix | Sort-Object InstalledOn -Descending</code><button class="copy-btn">copy</button></td><td>Installed Windows Updates and KBs, newest first</td></tr>
+              <tr><td class="copyable"><code>Get-ExecutionPolicy</code><button class="copy-btn">copy</button></td><td>Check current PowerShell script execution policy</td></tr>
+              <tr><td class="copyable"><code>Get-CimInstance Win32_OperatingSystem | select LastBootUpTime</code><button class="copy-btn">copy</button></td><td>When the system last rebooted</td></tr>
+              <tr><td class="copyable"><code>Get-WinEvent -LogName Security -MaxEvents 50</code><button class="copy-btn">copy</button></td><td>Recent Security event log entries (PS)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">RAID Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>RAID</th><th>Method</th><th>Min Disks</th><th>Fault Tolerance</th></tr></thead>
+            <tbody>
+              <tr><td>RAID 0</td><td>Striping</td><td>2</td><td>None - any disk failure = total loss</td></tr>
+              <tr><td>RAID 1</td><td>Mirroring</td><td>2</td><td>1 disk failure tolerated</td></tr>
+              <tr><td>RAID 5</td><td>Stripe + parity</td><td>3</td><td>1 disk failure tolerated</td></tr>
+              <tr><td>RAID 6</td><td>Stripe + dual parity</td><td>4</td><td>2 disk failures tolerated</td></tr>
+              <tr><td>RAID 10</td><td>Stripe of mirrors</td><td>4</td><td>1 per mirror pair</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">Backup Strategy Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>What It Backs Up</th><th>Speed</th><th>Restore</th></tr></thead>
+            <tbody>
+              <tr><td>Full</td><td>All data every time</td><td>Slowest</td><td>Single set - fastest restore</td></tr>
+              <tr><td>Incremental</td><td>Changes since last backup (any)</td><td>Fastest</td><td>Need all incrementals + last full</td></tr>
+              <tr><td>Differential</td><td>Changes since last full only</td><td>Medium</td><td>Last full + latest differential</td></tr>
+              <tr><td>Snapshot</td><td>Point-in-time copy (CoW)</td><td>Instant</td><td>Instant rollback, storage overhead</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Windows Networking</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>ipconfig /all</code><button class="copy-btn">copy</button></td><td>Full adapter info including MAC address, DNS servers, DHCP lease, and gateway</td></tr>
+          <tr><td class="copyable"><code>netstat -ano</code><button class="copy-btn">copy</button></td><td>All active TCP/UDP connections with associated PIDs (legacy but universal)</td></tr>
+          <tr><td class="copyable"><code>Get-NetTCPConnection</code><button class="copy-btn">copy</button></td><td>Modern netstat equivalent - active TCP connections with state and owning process ID</td></tr>
+          <tr><td class="copyable"><code>Get-DnsClientCache</code><button class="copy-btn">copy</button></td><td>View locally cached DNS records - useful for diagnosing stale or poisoned entries</td></tr>
+          <tr><td class="copyable"><code>Get-NetRoute</code><button class="copy-btn">copy</button></td><td>Display the full routing table - equivalent to <code>route print</code></td></tr>
+          <tr><td class="copyable"><code>Get-NetAdapter</code><button class="copy-btn">copy</button></td><td>List physical and virtual network adapters with link speed and status</td></tr>
+          <tr><td class="copyable"><code>(Invoke-RestMethod ipinfo.io/json).ip</code><button class="copy-btn">copy</button></td><td>Retrieve public egress IP address from PowerShell - no browser needed</td></tr>
+          <tr><td class="copyable"><code>Restart-Computer -ComputerName "PC01" -Force</code><button class="copy-btn">copy</button></td><td>Remotely restart a machine by name - requires WinRM or admin share access</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:16px">Windows Storage &amp; Services</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Get-Disk</code><button class="copy-btn">copy</button></td><td>List all physical disks with size, partition style (MBR/GPT), and health status</td></tr>
+          <tr><td class="copyable"><code>Get-Volume</code><button class="copy-btn">copy</button></td><td>Show all volumes with drive letter, filesystem, total size, and free space</td></tr>
+          <tr><td class="copyable"><code>Get-PhysicalDisk | select FriendlyName, HealthStatus, OperationalStatus</code><button class="copy-btn">copy</button></td><td>SMART-based health status per physical disk - spot failing drives early</td></tr>
+          <tr><td class="copyable"><code>Get-ChildItem C:\Path -Recurse | Measure-Object -Sum Length</code><button class="copy-btn">copy</button></td><td>Calculate total disk usage of a directory tree in bytes</td></tr>
+          <tr><td class="copyable"><code>Get-Service | Where Status -eq Running</code><button class="copy-btn">copy</button></td><td>List only services currently in a Running state</td></tr>
+          <tr><td class="copyable"><code>Get-Service | where Status -eq 'StartPending'</code><button class="copy-btn">copy</button></td><td>Find services stuck in Starting - indicates a hung or deadlocked service</td></tr>
+          <tr><td class="copyable"><code>Restart-Service -Name sshd</code><button class="copy-btn">copy</button></td><td>Restart a named service by its service name (not display name)</td></tr>
+          <tr><td class="copyable"><code>Get-CimInstance Win32_Service | select Name, PathName, StartMode</code><button class="copy-btn">copy</button></td><td>Service binary path and start mode - useful for spotting malicious service installs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ⑥ LOGS & MONITORING ───────────────────── -->
+  <section class="section" id="logs" style="--sec-color:var(--log)">
+    <div class="section-header">
+      <span class="section-num">⑥</span>
+      <h2>Logs &amp; Monitoring</h2>
+      <p>Linux logs · Windows Event IDs · Cron</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="sub-heading">Linux Log Paths</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Path / Command</th><th>Contents</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>/var/log/auth.log</code><button class="copy-btn">copy</button></td><td>SSH logins, sudo, auth failures (Debian/Ubuntu)</td></tr>
+              <tr><td class="copyable"><code>/var/log/secure</code><button class="copy-btn">copy</button></td><td>Same as auth.log on RHEL/CentOS</td></tr>
+              <tr><td class="copyable"><code>/var/log/syslog</code><button class="copy-btn">copy</button></td><td>General system messages and daemon output</td></tr>
+              <tr><td class="copyable"><code>/var/log/messages</code><button class="copy-btn">copy</button></td><td>Kernel + system messages (RHEL/CentOS)</td></tr>
+              <tr><td class="copyable"><code>/var/log/kern.log</code><button class="copy-btn">copy</button></td><td>Kernel ring buffer messages</td></tr>
+              <tr><td class="copyable"><code>/var/log/nginx/access.log</code><button class="copy-btn">copy</button></td><td>HTTP requests to Nginx web server</td></tr>
+              <tr><td class="copyable"><code>/var/log/nginx/error.log</code><button class="copy-btn">copy</button></td><td>Nginx errors and connection issues</td></tr>
+              <tr><td class="copyable"><code>/var/log/apache2/error.log</code><button class="copy-btn">copy</button></td><td>Apache web server errors</td></tr>
+              <tr><td class="copyable"><code>/var/log/cron</code><button class="copy-btn">copy</button></td><td>Cron job execution history</td></tr>
+              <tr><td class="copyable"><code>journalctl -u nginx</code><button class="copy-btn">copy</button></td><td>Systemd journal for a specific service</td></tr>
+              <tr><td class="copyable"><code>journalctl -b -p err</code><button class="copy-btn">copy</button></td><td>All errors since last boot (systemd)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">Windows Event IDs</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Event ID</th><th>Log</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>4624</td><td>Security</td><td>Successful logon</td></tr>
+              <tr><td>4625</td><td>Security</td><td>Failed logon attempt</td></tr>
+              <tr><td>4648</td><td>Security</td><td>Logon with explicit credentials (runas)</td></tr>
+              <tr><td>4672</td><td>Security</td><td>Special privileges assigned to new logon</td></tr>
+              <tr><td>4688</td><td>Security</td><td>New process created (process tracking)</td></tr>
+              <tr><td>4720</td><td>Security</td><td>User account created</td></tr>
+              <tr><td>4740</td><td>Security</td><td>Account locked out</td></tr>
+              <tr><td>4776</td><td>Security</td><td>DC validated credentials (NTLM)</td></tr>
+              <tr><td>7045</td><td>System</td><td>New service installed on the system</td></tr>
+              <tr><td>1102</td><td>Security</td><td>Audit log cleared - investigate immediately</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">Log Query Tools</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tool / Command</th><th>Use</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>Event Viewer (eventvwr.msc)</code><button class="copy-btn">copy</button></td><td>Windows GUI for all event logs</td></tr>
+              <tr><td class="copyable"><code>Get-WinEvent -LogName Security</code><button class="copy-btn">copy</button></td><td>PowerShell security log access</td></tr>
+              <tr><td class="copyable"><code>grep "Failed" /var/log/auth.log</code><button class="copy-btn">copy</button></td><td>Filter failed SSH attempts</td></tr>
+              <tr><td class="copyable"><code>last -n 20</code><button class="copy-btn">copy</button></td><td>Last 20 logins from /var/log/wtmp</td></tr>
+              <tr><td class="copyable"><code>lastb</code><button class="copy-btn">copy</button></td><td>Failed login attempts (/var/log/btmp)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Cron Job Syntax</div>
+    <div class="grid-2">
+      <div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Field</th><th>Range</th><th>Example</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>Minute</td><td>0-59</td><td><code>30</code></td><td>At minute 30</td></tr>
+              <tr><td>Hour</td><td>0-23</td><td><code>14</code></td><td>At 14:00 (2pm)</td></tr>
+              <tr><td>Day/Month</td><td>1-31</td><td><code>1</code></td><td>On the 1st of month</td></tr>
+              <tr><td>Month</td><td>1-12</td><td><code>*/3</code></td><td>Every 3 months</td></tr>
+              <tr><td>Day/Week</td><td>0-7</td><td><code>1-5</code></td><td>Mon-Fri (0=7=Sunday)</td></tr>
+              <tr><td><code>*</code></td><td>any</td><td><code>*</code></td><td>Every value in field</td></tr>
+              <tr><td><code>*/n</code></td><td>step</td><td><code>*/15</code></td><td>Every n units</td></tr>
+              <tr><td><code>,</code></td><td>list</td><td><code>1,15,30</code></td><td>At specific values</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cron Expression</th><th>Schedule</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>0 2 * * *</code><button class="copy-btn">copy</button></td><td>Every day at 02:00</td></tr>
+              <tr><td class="copyable"><code>*/5 * * * *</code><button class="copy-btn">copy</button></td><td>Every 5 minutes</td></tr>
+              <tr><td class="copyable"><code>0 0 1 * *</code><button class="copy-btn">copy</button></td><td>First day of every month, midnight</td></tr>
+              <tr><td class="copyable"><code>30 8 * * 1-5</code><button class="copy-btn">copy</button></td><td>Weekdays at 08:30</td></tr>
+              <tr><td class="copyable"><code>0 */4 * * *</code><button class="copy-btn">copy</button></td><td>Every 4 hours on the hour</td></tr>
+              <tr><td class="copyable"><code>@reboot /path/script</code><button class="copy-btn">copy</button></td><td>Run once at system startup</td></tr>
+              <tr><td class="copyable"><code>0 3 * * 0</code><button class="copy-btn">copy</button></td><td>Weekly Sunday at 03:00</td></tr>
+              <tr><td class="copyable"><code>0 12 1 1 *</code><button class="copy-btn">copy</button></td><td>Yearly - January 1st at noon</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑦ CERTIFICATES & FIREWALL ─────────────── -->
+  <section class="section" id="certs" style="--sec-color:var(--cert)">
+    <div class="section-header">
+      <span class="section-num">⑦</span>
+      <h2>Certificates &amp; Firewall</h2>
+      <p>OpenSSL · UFW · iptables</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="sub-heading">OpenSSL Certificate Commands</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>openssl x509 -in cert.pem -text -noout</code><button class="copy-btn">copy</button></td><td>Inspect cert: expiry, SAN, issuer, subject</td></tr>
+              <tr><td class="copyable"><code>openssl req -new -key key.pem -out csr.pem</code><button class="copy-btn">copy</button></td><td>Generate CSR from existing private key</td></tr>
+              <tr><td class="copyable"><code>openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365</code><button class="copy-btn">copy</button></td><td>Self-signed cert with new 4096-bit RSA key</td></tr>
+              <tr><td class="copyable"><code>openssl verify -CAfile ca.pem cert.pem</code><button class="copy-btn">copy</button></td><td>Verify cert chain against a CA bundle</td></tr>
+              <tr><td class="copyable"><code>openssl s_client -connect host:443</code><button class="copy-btn">copy</button></td><td>Test TLS handshake, view cert chain live</td></tr>
+              <tr><td class="copyable"><code>openssl pkcs12 -export -out bundle.pfx</code><button class="copy-btn">copy</button></td><td>Export cert + key to PFX/PKCS12 format</td></tr>
+              <tr><td class="copyable"><code>openssl dhparam -out dh.pem 2048</code><button class="copy-btn">copy</button></td><td>Generate Diffie-Hellman params for TLS</td></tr>
+              <tr><td class="copyable"><code>certbot renew --dry-run</code><button class="copy-btn">copy</button></td><td>Test Let's Encrypt auto-renewal (Certbot)</td></tr>
+              <tr><td class="copyable"><code>certbot certonly --nginx -d example.com</code><button class="copy-btn">copy</button></td><td>Issue/renew cert for nginx domain</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">UFW / iptables Rules</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>ufw enable</code><button class="copy-btn">copy</button></td><td>Activate UFW firewall</td></tr>
+              <tr><td class="copyable"><code>ufw status verbose</code><button class="copy-btn">copy</button></td><td>Show all rules with details</td></tr>
+              <tr><td class="copyable"><code>ufw allow 22/tcp</code><button class="copy-btn">copy</button></td><td>Allow SSH (TCP port 22)</td></tr>
+              <tr><td class="copyable"><code>ufw allow from 10.0.0.0/8</code><button class="copy-btn">copy</button></td><td>Allow all traffic from subnet</td></tr>
+              <tr><td class="copyable"><code>ufw deny 23</code><button class="copy-btn">copy</button></td><td>Block Telnet port</td></tr>
+              <tr><td class="copyable"><code>ufw delete allow 80/tcp</code><button class="copy-btn">copy</button></td><td>Remove a specific allow rule</td></tr>
+              <tr><td class="copyable"><code>iptables -L -n -v</code><button class="copy-btn">copy</button></td><td>List all iptables rules with packet counts</td></tr>
+              <tr><td class="copyable"><code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code><button class="copy-btn">copy</button></td><td>Accept HTTPS inbound traffic</td></tr>
+              <tr><td class="copyable"><code>iptables -A INPUT -j DROP</code><button class="copy-btn">copy</button></td><td>Drop all other inbound (default deny)</td></tr>
+              <tr><td class="copyable"><code>iptables-save &gt; /etc/iptables.rules</code><button class="copy-btn">copy</button></td><td>Persist iptables rules across reboots</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ DEVOPS ───────────────────────────────── -->
+  <section class="section" id="devops" style="--sec-color:var(--devops)">
+    <div class="section-header">
+      <span class="section-num">⑧</span>
+      <h2>DevOps Tools</h2>
+      <p>Docker · Git · Kubernetes basics · IaC</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="sub-heading">Docker Essential Commands</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker build -t name:tag .</code><button class="copy-btn">copy</button></td><td>Build image from Dockerfile in current dir</td></tr>
+              <tr><td class="copyable"><code>docker run -d -p 80:80 --name c nginx</code><button class="copy-btn">copy</button></td><td>Run detached container with port mapping</td></tr>
+              <tr><td class="copyable"><code>docker ps -a</code><button class="copy-btn">copy</button></td><td>List all containers (running + stopped)</td></tr>
+              <tr><td class="copyable"><code>docker exec -it &lt;id&gt; bash</code><button class="copy-btn">copy</button></td><td>Open interactive shell in running container</td></tr>
+              <tr><td class="copyable"><code>docker logs -f &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Follow container log output</td></tr>
+              <tr><td class="copyable"><code>docker stop &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Gracefully stop a container (SIGTERM)</td></tr>
+              <tr><td class="copyable"><code>docker rm &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Remove stopped container</td></tr>
+              <tr><td class="copyable"><code>docker images</code><button class="copy-btn">copy</button></td><td>List locally stored images</td></tr>
+              <tr><td class="copyable"><code>docker rmi name:tag</code><button class="copy-btn">copy</button></td><td>Delete a local image</td></tr>
+              <tr><td class="copyable"><code>docker pull nginx:alpine</code><button class="copy-btn">copy</button></td><td>Pull image from Docker Hub</td></tr>
+              <tr><td class="copyable"><code>docker push registry/img:tag</code><button class="copy-btn">copy</button></td><td>Push image to registry</td></tr>
+              <tr><td class="copyable"><code>docker-compose up -d</code><button class="copy-btn">copy</button></td><td>Start all services in docker-compose.yml</td></tr>
+              <tr><td class="copyable"><code>docker system prune -af</code><button class="copy-btn">copy</button></td><td>Remove all unused containers, images, networks</td></tr>
+              <tr><td class="copyable"><code>docker inspect &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Full JSON metadata for container/image</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">Git Essentials</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>git init</code><button class="copy-btn">copy</button></td><td>Initialize new local repository</td></tr>
+              <tr><td class="copyable"><code>git clone &lt;url&gt;</code><button class="copy-btn">copy</button></td><td>Clone remote repository locally</td></tr>
+              <tr><td class="copyable"><code>git status</code><button class="copy-btn">copy</button></td><td>Show working tree and staging area status</td></tr>
+              <tr><td class="copyable"><code>git add -p</code><button class="copy-btn">copy</button></td><td>Interactively stage chunks of changes</td></tr>
+              <tr><td class="copyable"><code>git commit -m "message"</code><button class="copy-btn">copy</button></td><td>Commit staged changes with message</td></tr>
+              <tr><td class="copyable"><code>git push origin main</code><button class="copy-btn">copy</button></td><td>Push local commits to remote</td></tr>
+              <tr><td class="copyable"><code>git pull --rebase</code><button class="copy-btn">copy</button></td><td>Fetch and rebase onto remote changes</td></tr>
+              <tr><td class="copyable"><code>git branch -a</code><button class="copy-btn">copy</button></td><td>List all local and remote branches</td></tr>
+              <tr><td class="copyable"><code>git checkout -b feature/x</code><button class="copy-btn">copy</button></td><td>Create and switch to new branch</td></tr>
+              <tr><td class="copyable"><code>git merge --no-ff feature/x</code><button class="copy-btn">copy</button></td><td>Merge feature branch, preserve history</td></tr>
+              <tr><td class="copyable"><code>git stash pop</code><button class="copy-btn">copy</button></td><td>Apply most recent stash and remove it</td></tr>
+              <tr><td class="copyable"><code>git log --oneline --graph</code><button class="copy-btn">copy</button></td><td>Compact visual branch history</td></tr>
+              <tr><td class="copyable"><code>git reset HEAD~1</code><button class="copy-btn">copy</button></td><td>Undo last commit, keep changes staged</td></tr>
+              <tr><td class="copyable"><code>git revert &lt;hash&gt;</code><button class="copy-btn">copy</button></td><td>Create new commit that undoes a past commit</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">DevOps Tool Landscape</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Category</th><th>Tools</th></tr></thead>
+            <tbody>
+              <tr><td>Containers</td><td>Docker, Podman, containerd</td></tr>
+              <tr><td>Orchestration</td><td>Kubernetes, Docker Swarm, Nomad</td></tr>
+              <tr><td>CI/CD</td><td>GitHub Actions, GitLab CI, Jenkins, CircleCI</td></tr>
+              <tr><td>IaC</td><td>Terraform, Pulumi, CloudFormation, Bicep</td></tr>
+              <tr><td>Config Mgmt</td><td>Ansible, Chef, Puppet, SaltStack</td></tr>
+              <tr><td>Monitoring</td><td>Prometheus, Grafana, Datadog, New Relic</td></tr>
+              <tr><td>Logging</td><td>ELK Stack, Loki, Splunk, CloudWatch</td></tr>
+              <tr><td>Secrets</td><td>HashiCorp Vault, AWS Secrets Manager, SOPS</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑨ NETWORKING DEEP DIVE ─────────────────── -->
+  <section class="section" id="netdive" style="--sec-color:var(--dns)">
+    <div class="section-header">
+      <span class="section-num">⑨</span>
+      <h2>Networking Deep Dive</h2>
+      <p>DNS resolution · Cables · WiFi 802.11</p>
+    </div>
+
+    <div class="sub-heading">DNS Resolution - 8-Step Process</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Who Acts</th><th>What Happens</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Browser / OS</td><td>Check local DNS cache (TTL-based). If hit, done.</td></tr>
+          <tr><td>2</td><td>OS</td><td>Check <code>/etc/hosts</code> (Linux) or <code>C:\Windows\System32\drivers\etc\hosts</code></td></tr>
+          <tr><td>3</td><td>OS to Resolver</td><td>Query sent to configured recursive resolver (ISP or 8.8.8.8)</td></tr>
+          <tr><td>4</td><td>Resolver to Root</td><td>Resolver queries a root server (.) - 13 root server clusters</td></tr>
+          <tr><td>5</td><td>Resolver to TLD</td><td>Root refers resolver to .com / .org / .io TLD server</td></tr>
+          <tr><td>6</td><td>Resolver to Auth NS</td><td>TLD refers resolver to the authoritative nameserver for the domain</td></tr>
+          <tr><td>7</td><td>Auth NS responds</td><td>Returns A/AAAA record (the actual IP address)</td></tr>
+          <tr><td>8</td><td>Resolver caches</td><td>Stores result per TTL, returns to client. Client caches too.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">Cable Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cable</th><th>Max Speed</th><th>Max Length</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Cat5</td><td>100 Mbps</td><td>100m</td><td>Obsolete, avoid for new installs</td></tr>
+              <tr><td>Cat5e</td><td>1 Gbps</td><td>100m</td><td>Minimum current standard</td></tr>
+              <tr><td>Cat6</td><td>10 Gbps</td><td>55m</td><td>Common for new installs</td></tr>
+              <tr><td>Cat6A</td><td>10 Gbps</td><td>100m</td><td>10G at full 100m distance</td></tr>
+              <tr><td>Cat7</td><td>10 Gbps</td><td>100m</td><td>Shielded, proprietary connectors</td></tr>
+              <tr><td>Fiber MM</td><td>10+ Gbps</td><td>2km</td><td>Multimode, shorter runs, cheaper</td></tr>
+              <tr><td>Fiber SM</td><td>100+ Gbps</td><td>100km</td><td>Single-mode, long distance, datacenter</td></tr>
+              <tr><td>T568B</td><td>Std</td><td>-</td><td>Orange-wh, Orange, Green-wh, Blue… (standard)</td></tr>
+              <tr><td>T568A</td><td>Std</td><td>-</td><td>Crossover: swap pairs 2 and 3 from T568B</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">WiFi 802.11 Standards</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Standard</th><th>Band</th><th>Max Speed</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>802.11b</td><td>2.4 GHz</td><td>11 Mbps</td><td>Legacy, long range, slow</td></tr>
+              <tr><td>802.11g</td><td>2.4 GHz</td><td>54 Mbps</td><td>Backward compat with b</td></tr>
+              <tr><td>802.11n</td><td>2.4/5 GHz</td><td>600 Mbps</td><td>MIMO, dual band - WiFi 4</td></tr>
+              <tr><td>802.11ac</td><td>5 GHz</td><td>3.5 Gbps</td><td>Wave 2, MU-MIMO - WiFi 5</td></tr>
+              <tr><td>802.11ax</td><td>2.4/5/6 GHz</td><td>9.6 Gbps</td><td>OFDMA, BSS coloring - WiFi 6/6E</td></tr>
+              <tr><td>802.11be</td><td>2.4/5/6 GHz</td><td>46 Gbps</td><td>Multi-link operation - WiFi 7</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">Cloud Service Models</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>You Manage</th><th>Examples</th></tr></thead>
+            <tbody>
+              <tr><td>IaaS</td><td>OS, runtime, apps, data</td><td>AWS EC2, Azure VMs, GCP Compute</td></tr>
+              <tr><td>PaaS</td><td>App and data only</td><td>Heroku, Azure App Service, App Engine</td></tr>
+              <tr><td>SaaS</td><td>Nothing (just use it)</td><td>Office 365, Salesforce, Gmail</td></tr>
+              <tr><td>FaaS</td><td>Code only</td><td>AWS Lambda, Azure Functions, Cloud Run</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑩ CLOUD ────────────────────────────────── -->
+  <section class="section" id="cloud" style="--sec-color:var(--cloud)">
+    <div class="section-header">
+      <span class="section-num">⑩</span>
+      <h2>Cloud Platforms - AWS &amp; Azure</h2>
+      <p>Core services · IAM · VNet/VPC · Shared responsibility</p>
+    </div>
+
+    <div class="sub-heading" style="--sec-color:#C2410C">AWS Core Services</div>
+    <div class="table-wrap" style="--sec-color:#C2410C">
+      <table>
+        <thead><tr><th>Service</th><th>Category</th><th>What it Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>EC2</code></td><td>Compute</td><td>Virtual machines - pay-as-you-go, reserved, or spot pricing</td></tr>
+          <tr><td><code>Lambda</code></td><td>Compute</td><td>Serverless functions - event-driven, pay-per-execution</td></tr>
+          <tr><td><code>ECS / EKS</code></td><td>Containers</td><td>ECS = managed containers; EKS = managed Kubernetes</td></tr>
+          <tr><td><code>S3</code></td><td>Storage</td><td>Object storage - 11-nines durability, unlimited scale</td></tr>
+          <tr><td><code>EBS</code></td><td>Storage</td><td>Block storage volumes attached to EC2 instances</td></tr>
+          <tr><td><code>EFS</code></td><td>Storage</td><td>Managed NFS for Linux - shared across multiple EC2s</td></tr>
+          <tr><td><code>RDS</code></td><td>Database</td><td>Managed SQL DB - MySQL, Postgres, SQL Server, Oracle, Aurora</td></tr>
+          <tr><td><code>DynamoDB</code></td><td>Database</td><td>Fully managed NoSQL - key-value and document model</td></tr>
+          <tr><td><code>VPC</code></td><td>Networking</td><td>Isolated virtual network with subnets, route tables, NACLs, SGs</td></tr>
+          <tr><td><code>Route 53</code></td><td>Networking</td><td>DNS + health checks + routing policies (failover, latency, geo)</td></tr>
+          <tr><td><code>CloudFront</code></td><td>Networking</td><td>CDN with 400+ PoPs, caches S3/EC2 content globally</td></tr>
+          <tr><td><code>IAM</code></td><td>Security</td><td>Users, groups, roles, and policies for access control</td></tr>
+          <tr><td><code>CloudWatch</code></td><td>Monitoring</td><td>Metrics, logs, alarms, dashboards for all AWS services</td></tr>
+          <tr><td><code>CloudFormation</code></td><td>IaC</td><td>Infrastructure as Code using JSON/YAML templates</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px;--sec-color:#0078D4">Azure Core Services</div>
+    <div class="table-wrap" style="--sec-color:#0078D4">
+      <table>
+        <thead><tr><th>Service</th><th>Category</th><th>What it Does</th></tr></thead>
+        <tbody>
+          <tr><td>Virtual Machines</td><td>Compute</td><td>IaaS VMs - VM Scale Sets for autoscaling, Availability Zones for HA</td></tr>
+          <tr><td>App Service</td><td>Compute</td><td>PaaS web hosting - no OS management, built-in autoscale, deployment slots</td></tr>
+          <tr><td>Azure Functions</td><td>Compute</td><td>Serverless event-driven code - pay-per-execution</td></tr>
+          <tr><td>ACI / AKS</td><td>Containers</td><td>ACI = serverless containers; AKS = managed Kubernetes cluster</td></tr>
+          <tr><td>Blob Storage</td><td>Storage</td><td>Object store - Hot/Cool/Archive tiers, lifecycle management</td></tr>
+          <tr><td>Azure Disk</td><td>Storage</td><td>Managed disks: Standard HDD, Standard SSD, Premium SSD</td></tr>
+          <tr><td>Azure Files</td><td>Storage</td><td>Managed SMB/NFS file shares - cloud and hybrid use</td></tr>
+          <tr><td>Azure SQL / Cosmos DB</td><td>Database</td><td>Managed SQL; Cosmos = multi-model NoSQL (DynamoDB equivalent)</td></tr>
+          <tr><td>VNet</td><td>Networking</td><td>Isolated virtual network with subnets, NSGs, route tables, peering</td></tr>
+          <tr><td>Azure DNS</td><td>Networking</td><td>Host DNS zones, manage records, private DNS zones for VNets</td></tr>
+          <tr><td>Azure CDN / Front Door</td><td>Networking</td><td>CDN delivery + global load balancing with WAF</td></tr>
+          <tr><td>Azure AD (Entra ID)</td><td>Identity</td><td>Cloud identity: users, groups, MFA, SSO, Conditional Access</td></tr>
+          <tr><td>Azure Monitor</td><td>Monitoring</td><td>Metrics, Log Analytics workspace, alerts, Application Insights</td></tr>
+          <tr><td>ARM Templates / Bicep</td><td>IaC</td><td>JSON/Bicep Infrastructure as Code for Azure resources</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">AWS vs Azure Service Mapping</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>AWS</th><th>Azure</th><th>Category</th></tr></thead>
+            <tbody>
+              <tr><td><code>EC2</code></td><td>Virtual Machines</td><td>Compute</td></tr>
+              <tr><td><code>Lambda</code></td><td>Azure Functions</td><td>Serverless</td></tr>
+              <tr><td><code>ECS / EKS</code></td><td>ACI / AKS</td><td>Containers</td></tr>
+              <tr><td><code>S3</code></td><td>Blob Storage</td><td>Object Store</td></tr>
+              <tr><td><code>EBS</code></td><td>Azure Disk</td><td>Block Storage</td></tr>
+              <tr><td><code>EFS</code></td><td>Azure Files</td><td>File Share</td></tr>
+              <tr><td><code>RDS</code></td><td>Azure SQL Database</td><td>Managed SQL</td></tr>
+              <tr><td><code>DynamoDB</code></td><td>Cosmos DB</td><td>NoSQL DB</td></tr>
+              <tr><td><code>VPC</code></td><td>VNet</td><td>Networking</td></tr>
+              <tr><td><code>Security Groups</code></td><td>NSG (Network Security Group)</td><td>Firewall</td></tr>
+              <tr><td><code>Route 53</code></td><td>Azure DNS</td><td>DNS</td></tr>
+              <tr><td><code>CloudFront</code></td><td>Azure CDN / Front Door</td><td>CDN</td></tr>
+              <tr><td><code>IAM</code></td><td>Azure AD + RBAC</td><td>Identity</td></tr>
+              <tr><td><code>CloudWatch</code></td><td>Azure Monitor</td><td>Monitoring</td></tr>
+              <tr><td><code>CloudFormation</code></td><td>ARM Templates / Bicep</td><td>IaC</td></tr>
+              <tr><td><code>Direct Connect</code></td><td>ExpressRoute</td><td>Private Link</td></tr>
+              <tr><td><code>AWS VPN Gateway</code></td><td>Azure VPN Gateway</td><td>VPN</td></tr>
+              <tr><td><code>AWS Config</code></td><td>Azure Policy</td><td>Compliance</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">Azure RBAC Built-in Roles</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Role</th><th>Read</th><th>Grant</th><th>Create/Del</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr><td>Owner</td><td>✓</td><td>✓</td><td>✓</td><td>Full control of all resources</td></tr>
+              <tr><td>Contributor</td><td>✓</td><td></td><td>✓</td><td>All actions except access grants</td></tr>
+              <tr><td>Reader</td><td>✓</td><td></td><td></td><td>View only, no changes</td></tr>
+              <tr><td>User Access Admin</td><td>✓</td><td>✓</td><td></td><td>Manage user access only</td></tr>
+              <tr><td>Global Admin (AAD)</td><td>-</td><td>-</td><td>-</td><td>All Azure AD resources</td></tr>
+              <tr><td>User Admin (AAD)</td><td>-</td><td>-</td><td>-</td><td>Users, groups, passwords</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-heading" style="margin-top:16px">AWS vs Azure Pricing</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>AWS</th><th>Azure</th></tr></thead>
+            <tbody>
+              <tr><td>Pay-as-you-go</td><td>On-Demand</td><td>Pay-as-you-go</td></tr>
+              <tr><td>Reserved (1-3yr)</td><td>Reserved Instances</td><td>Reserved Instances</td></tr>
+              <tr><td>Spot / Preemptible</td><td>Spot Instances</td><td>Spot VMs (up to 90% off)</td></tr>
+              <tr><td>Savings Plans</td><td>Compute Savings Plans</td><td>Azure Savings Plan</td></tr>
+              <tr><td>Ingress</td><td>Free</td><td>Free</td></tr>
+              <tr><td>Egress</td><td>Charged (per GB)</td><td>Charged (per GB out)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Shared Responsibility Model</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>On-Premises</th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr></thead>
+        <tbody>
+          <tr><td>Physical DC / Hardware</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-prov">Provider</span></td><td><span class="badge badge-prov">Provider</span></td><td><span class="badge badge-prov">Provider</span></td></tr>
+          <tr><td>Hypervisor / Host OS</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-prov">Provider</span></td><td><span class="badge badge-prov">Provider</span></td><td><span class="badge badge-prov">Provider</span></td></tr>
+          <tr><td>Guest OS / Runtime</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-prov">Provider</span></td><td><span class="badge badge-prov">Provider</span></td></tr>
+          <tr><td>Middleware / Application</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU (app)</span></td><td><span class="badge badge-prov">Provider</span></td></tr>
+          <tr><td>Data / Content</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td></tr>
+          <tr><td>Network Configuration</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-shared">Shared</span></td><td><span class="badge badge-shared">Shared</span></td><td><span class="badge badge-prov">Provider</span></td></tr>
+          <tr><td>Identities / Accounts</td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td><td><span class="badge badge-you">YOU</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">VNet / VPC Key Concepts</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>AWS (VPC)</th><th>Azure (VNet)</th></tr></thead>
+        <tbody>
+          <tr><td>Address Space</td><td>CIDR block (e.g. 10.0.0.0/16)</td><td>CIDR block, can add multiple prefixes</td></tr>
+          <tr><td>Subnets</td><td>Public (IGW route) / Private</td><td>Any subnet - NSG controls inbound/outbound</td></tr>
+          <tr><td>Firewall (stateful)</td><td>Security Groups (instance level)</td><td>Network Security Groups (NSG)</td></tr>
+          <tr><td>Firewall (stateless)</td><td>NACLs (subnet level)</td><td>NSG has stateful rules, no separate NACL</td></tr>
+          <tr><td>Peering</td><td>VPC Peering (same/cross-region)</td><td>VNet Peering / Global VNet Peering</td></tr>
+          <tr><td>Private WAN</td><td>Direct Connect</td><td>ExpressRoute</td></tr>
+          <tr><td>VPN</td><td>AWS VPN Gateway</td><td>Azure VPN Gateway</td></tr>
+          <tr><td>NAT</td><td>NAT Gateway (managed, per-AZ)</td><td>NAT Gateway (managed)</td></tr>
+          <tr><td>DNS</td><td>Route 53 / VPC DNS (169.254.169.253)</td><td>Azure DNS / Private DNS Zones</td></tr>
+          <tr><td>Flow Logs</td><td>VPC Flow Logs to S3/CloudWatch</td><td>NSG Flow Logs to Storage/Log Analytics</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">HA vs Fault Tolerance vs Disaster Recovery</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>Goal</th><th>Downtime</th><th>AWS Example</th><th>Azure Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>High Availability</strong></td><td>Keep running despite single failures</td><td>Minutes (auto-heal)</td><td>Multi-AZ RDS, ALB across AZs</td><td>Availability Zones, Azure Load Balancer</td></tr>
+          <tr><td><strong>Fault Tolerance</strong></td><td>Zero downtime, no errors, continuous</td><td>Near zero</td><td>S3 (11-nines), DynamoDB, Global Tables</td><td>Cosmos DB, Storage LRS/ZRS/GRS</td></tr>
+          <tr><td><strong>Disaster Recovery</strong></td><td>Restore after regional catastrophe</td><td>Hours (RTO goal)</td><td>Pilot light, warm standby, multi-region</td><td>Azure Site Recovery, geo-replication</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--text3);margin-top:8px;padding:0 4px;">
+      <strong>RPO</strong> (Recovery Point Objective) = max acceptable data loss in time.
+      <strong>RTO</strong> (Recovery Time Objective) = max acceptable downtime after disaster.
+    </p>
+  </section>
+
+  <!-- ⑪ RESOURCES & TOOLS ─────────────────────── -->
+  <section class="section" id="resources" style="--sec-color:var(--res)">
+    <div class="section-header">
+      <span class="section-num">⑪</span>
+      <h2>Resources &amp; Tools</h2>
+      <p>Communities · Core tools · Diagnostics</p>
+    </div>
+
+    <div class="sub-heading">Communities &amp; Learning</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resource</th><th>URL / Location</th><th>What it Covers</th></tr></thead>
+        <tbody>
+          <tr><td>r/sysadmin · r/linux · r/linuxadmin · r/netsec</td><td>reddit.com</td><td>Community Q&amp;A, incident threads, war stories, tooling discussions</td></tr>
+          <tr><td>Brutalist Report</td><td><a href="https://brutalist.report" target="_blank">brutalist.report</a></td><td>Daily tech &amp; security headlines, aggregated and unformatted</td></tr>
+          <tr><td>Microsoft Learn</td><td><a href="https://learn.microsoft.com" target="_blank">learn.microsoft.com</a></td><td>Free official docs, learning paths, and certifications for Azure, Windows, and M365</td></tr>
+          <tr><td>O'Reilly Topics</td><td><a href="https://oreilly.com/topics" target="_blank">oreilly.com/topics</a></td><td>Broad technical learning - books, videos, courses</td></tr>
+          <tr><td>Ask Ubuntu</td><td><a href="https://askubuntu.com" target="_blank">askubuntu.com</a></td><td>Ubuntu-focused Q&amp;A, highly indexed by search engines</td></tr>
+          <tr><td>DigitalOcean Tutorials</td><td><a href="https://digitalocean.com" target="_blank">digitalocean.com</a></td><td>Clear, practical guides for Linux, OSS, and infra topics</td></tr>
+          <tr><td>ServerFault</td><td><a href="https://serverfault.com" target="_blank">serverfault.com</a></td><td>Stack Exchange for professional sysadmins and network engineers</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Core Tools</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>URL / Source</th><th>What it Does</th></tr></thead>
+        <tbody>
+          <tr><td>MX Toolbox</td><td><a href="https://mxtoolbox.com" target="_blank">mxtoolbox.com</a></td><td>DNS, mail, SPF / DMARC / DKIM checks in one place</td></tr>
+          <tr><td>Sysinternals Suite</td><td>Microsoft / learn.microsoft.com</td><td>Windows diagnostics &amp; troubleshooting (Process Monitor, Autoruns, TCPView…)</td></tr>
+          <tr><td>PuTTY</td><td>putty.org</td><td>SSH, Telnet, serial - still essential for Cisco and console work</td></tr>
+          <tr><td>WinSCP</td><td>winscp.net</td><td>Fast file transfer over FTP / SFTP / SSH with GUI</td></tr>
+          <tr><td>Angry IP Scanner / Advanced IP Scanner</td><td>angryip.org</td><td>Quick network sweeps - host discovery and port scan</td></tr>
+
+          <tr><td>WinDbg</td><td>Microsoft Store / WDK</td><td>Windows kernel and crash dump debugging</td></tr>
+          <tr><td>Wireshark</td><td>wireshark.org</td><td>Packet capture and deep protocol analysis</td></tr>
+          <tr><td>Rufus</td><td>rufus.ie</td><td>Write bootable USB images (ISO → USB) on Windows</td></tr>
+          <tr><td>Nmap</td><td>nmap.org</td><td>Network scanning, host discovery, OS fingerprinting, port enumeration</td></tr>
+          <tr><td>OpenSSL</td><td>openssl.org</td><td>TLS, certificate generation, cert inspection, and crypto utilities</td></tr>
+          <tr><td>Git</td><td>git-scm.com</td><td>Version control for scripts, configs, and infrastructure-as-code</td></tr>
+          <tr><td>Crontab Guru</td><td><a href="https://crontab.guru" target="_blank">crontab.guru</a></td><td>Cron expression editor and validator - instant visual feedback</td></tr>
+          <tr><td>cheat.sh</td><td><a href="https://cheat.sh" target="_blank">cheat.sh</a></td><td>Instant CLI cheatsheets from the terminal: <code>curl cheat.sh/tar</code></td></tr>
+          <tr><td>End-of-Life Info</td><td><a href="https://endoflife.date" target="_blank">endoflife.date</a></td><td>Support and EoL timelines for OS, runtimes, databases, and tools</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Diagnostics &amp; Security</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>URL</th><th>What it Does</th></tr></thead>
+        <tbody>
+          <tr><td>WhatIsMyIPAddress</td><td><a href="https://whatismyipaddress.com" target="_blank">whatismyipaddress.com</a></td><td>IP lookup with strong GeoIP resolution - useful for egress verification</td></tr>
+          <tr><td>Cloudflare Speed Test</td><td><a href="https://speed.cloudflare.com" target="_blank">speed.cloudflare.com</a></td><td>Clean download / upload / latency test - no ads, no Flash</td></tr>
+          <tr><td>VirusTotal</td><td><a href="https://virustotal.com" target="_blank">virustotal.com</a></td><td>Malware and URL scanning across 60+ antivirus engines simultaneously</td></tr>
+          <tr><td>ANY.RUN</td><td><a href="https://app.any.run" target="_blank">app.any.run</a></td><td>Interactive sandbox for malware and phishing analysis - watch execution live</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="no-results" id="no-results">No results found. Try a different search term.</div>
+
+</main>
+</div>
+
+<script>
+// ── Theme toggle ────────────────────────────────
+const html = document.documentElement;
+const btn  = document.getElementById('theme-btn');
+const lbl  = document.getElementById('theme-label');
+
+btn.addEventListener('click', () => {
+  const dark = html.dataset.theme === 'dark';
+  html.dataset.theme = dark ? 'light' : 'dark';
+  lbl.textContent = dark ? 'Dark mode' : 'Light mode';
+});
+
+// ── Copy to clipboard ───────────────────────────
+document.querySelectorAll('td.copyable').forEach(td => {
+  const btn = td.querySelector('.copy-btn');
+  td.addEventListener('click', e => {
+    if (e.target === btn || td.contains(e.target)) {
+      const code = td.querySelector('code');
+      const text = code ? code.textContent : td.textContent.replace(/copy$/,'').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied') }, 1500);
+      });
+    }
+  });
+});
+
+// ── Live search ─────────────────────────────────
+const searchEl   = document.getElementById('search');
+const countEl    = document.getElementById('search-count');
+const noResults  = document.getElementById('no-results');
+
+function normalize(s) { return s.toLowerCase().replace(/\s+/g,' ').trim() }
+
+searchEl.addEventListener('input', () => {
+  const q = normalize(searchEl.value);
+  if (!q) {
+    document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('hidden-row','highlight'));
+    document.querySelectorAll('.section').forEach(s => s.style.display = '');
+    noResults.style.display = 'none';
+    countEl.textContent = '';
+    return;
+  }
+
+  let total = 0;
+  document.querySelectorAll('tbody tr').forEach(row => {
+    const text = normalize(row.textContent);
+    const match = text.includes(q);
+    row.classList.toggle('hidden-row', !match);
+    row.classList.toggle('highlight', match);
+    if (match) total++;
+  });
+
+  // Hide sections where every row is hidden
+  document.querySelectorAll('.section').forEach(sec => {
+    const rows = sec.querySelectorAll('tbody tr');
+    const anyVisible = [...rows].some(r => !r.classList.contains('hidden-row'));
+    sec.style.display = anyVisible ? '' : 'none';
+  });
+
+  countEl.textContent = total ? `${total} result${total===1?'':'s'}` : '';
+  noResults.style.display = total ? 'none' : 'block';
+});
+
+// ── Active section tracking ─────────────────────
+const navLinks  = document.querySelectorAll('.nav-link');
+const sections  = document.querySelectorAll('.section');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// ── Keyboard shortcut: / to focus search ────────
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchEl) {
+    e.preventDefault();
+    searchEl.focus();
+  }
+  if (e.key === 'Escape') { searchEl.value = ''; searchEl.dispatchEvent(new Event('input')) }
+});
+</script>
+</body>
+</html>
