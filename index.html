@@ -297,6 +297,14 @@ a { color:inherit; text-decoration:none }
   align-items:center;
   gap:6px;
 }
+.group-label {
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  opacity:0.55;
+  margin:8px 0 4px;
+}
 .sub-heading::after {
   content:'';
   flex:1;
@@ -323,7 +331,9 @@ a { color:inherit; text-decoration:none }
 .table-wrap {
   border:1px solid var(--border);
   border-radius:var(--radius);
-  overflow:hidden;
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
   box-shadow:var(--shadow);
 }
 table {
@@ -367,8 +377,10 @@ tbody td:first-child { font-weight:500 }
   border-radius:4px;
   display:inline-block;
   max-width:100%;
-  word-break:break-all;
+  word-break:break-word;
 }
+/* Keep commands on one line inside scrollable copyable cells */
+td.copyable code { white-space:nowrap; word-break:normal; }
 [data-theme="dark"] .cmd, [data-theme="dark"] code {
   background:color-mix(in srgb,var(--sec-color,var(--net)) 15%,var(--surface2));
 }
@@ -424,111 +436,61 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
 ::-webkit-scrollbar-track { background:transparent }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px }
 
-/* ── Mobile toggle button ────────────────────── */
-.mobile-header {
+/* ── Hamburger button ────────────────────────── */
+.menu-toggle {
   display:none;
-  position:fixed;
-  top:0; left:0; right:0;
-  height:52px;
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
   align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
-  z-index:200;
-}
-.mobile-logo {
-  font-family:'Bricolage Grotesque',sans-serif;
-  font-weight:800;
-  font-size:14px;
-  color:var(--text);
-}
-.hamburger {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:5px;
-  width:36px; height:36px;
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:6px;
+  gap:8px;
+  padding:8px 16px 10px;
+  background:none;
+  border:none;
   cursor:pointer;
-  padding:8px;
+  color:var(--text2);
+  font-family:'Instrument Sans',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  width:100%;
+  text-align:left;
 }
-.hamburger span {
-  display:block;
-  height:2px;
-  background:var(--text2);
-  border-radius:2px;
-  transition:all .2s;
-}
-.hamburger.open span:nth-child(1) { transform:rotate(45deg) translateY(7px) }
-.hamburger.open span:nth-child(2) { opacity:0 }
-.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translateY(-7px) }
-
-/* ── Overlay ─────────────────────────────────── */
-.sidebar-overlay {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  z-index:149;
-}
-.sidebar-overlay.visible { display:block }
+.menu-toggle svg { flex-shrink:0 }
+.menu-toggle:hover { color:var(--text) }
 
 /* ── Responsive ──────────────────────────────── */
 @media (max-width:900px) {
-  .mobile-header { display:flex }
-
   .sidebar {
-    top:0; left:-260px;
-    width:260px;
-    height:100vh;
-    transition:left .25s ease;
-    z-index:150;
-    padding-top:52px;
+    width:100%; height:auto; position:static;
+    border-right:none; border-bottom:1px solid var(--border);
+    flex-direction:column; overflow-y:visible;
   }
-  .sidebar.open { left:0 }
-
-  .main {
-    margin-left:0;
-    padding:72px 16px 60px;
-  }
-
+  .menu-toggle { display:flex }
+  .nav-section-label,
+  .nav-links,
+  .sidebar-footer { display:none }
+  .sidebar.open .nav-section-label,
+  .sidebar.open .nav-links,
+  .sidebar.open .sidebar-footer { display:block }
+  .main { margin-left:0; padding:20px 16px }
   .grid-2, .grid-3 { grid-template-columns:1fr }
+  /* Copy button always visible on touch */
+  td.copyable .copy-btn { opacity:1; position:static; transform:none; margin-left:6px; display:inline-block }
+  td.copyable { display:flex; align-items:flex-start; gap:4px; flex-wrap:wrap }
+}
 
-  .table-wrap {
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  table { min-width:480px }
-
-  .hero h1 { font-size:26px }
-
-  .section-header p { display:none }
-
-  td.copyable .copy-btn {
-    opacity:1;
-    position:static;
-    transform:none;
-    display:inline-block;
-    margin-left:6px;
-    vertical-align:middle;
-  }
-  td.copyable { padding-right:8px }
+@media (max-width:600px) {
+  html { font-size:13px }
+  .section { padding:20px 0 }
+  .section-header { padding:14px 16px }
+  .section-num { font-size:20px }
+  .section-header h2 { font-size:16px }
+  table { font-size:12px }
+  thead th { padding:7px 10px; font-size:10.5px }
+  tbody td { padding:7px 10px }
+  .sub-heading { font-size:11px; padding:5px 10px }
+  .hero h1 { font-size:24px }
 }
 </style>
 </head>
 <body>
-
-<div class="mobile-header">
-  <span class="mobile-logo">SysAdmin Ref</span>
-  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-</div>
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="layout">
 
@@ -548,6 +510,10 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
   </div>
   <div class="search-count" id="search-count"></div>
 
+  <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    Sections
+  </button>
   <div class="nav-section-label">Sections</div>
   <ul class="nav-links">
     <li><a href="#networking"  class="nav-link"><span class="nav-dot" style="background:var(--net)"></span>① Networking</a></li>
@@ -560,7 +526,8 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
     <li><a href="#devops"      class="nav-link"><span class="nav-dot" style="background:var(--devops)"></span>⑧ DevOps Tools</a></li>
     <li><a href="#netdive"     class="nav-link"><span class="nav-dot" style="background:var(--dns)"></span>⑨ Net Deep Dive</a></li>
     <li><a href="#cloud"       class="nav-link"><span class="nav-dot" style="background:var(--cloud)"></span>⑩ Cloud: AWS &amp; Azure</a></li>
-    <li><a href="#resources"   class="nav-link"><span class="nav-dot" style="background:var(--res)"></span>⑪ Resources &amp; Tools</a></li>
+    <li><a href="#m365"        class="nav-link"><span class="nav-dot" style="background:#0078D4"></span>⑪ M365 &amp; Entra ID</a></li>
+    <li><a href="#resources"   class="nav-link"><span class="nav-dot" style="background:var(--res)"></span>⑫ Resources &amp; Tools</a></li>
   </ul>
 
   <div class="sidebar-footer">
@@ -608,7 +575,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
         <div class="sub-heading">IPv4 Address Ranges</div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Range</th><th>Type</th><th>Notes</th></tr></thead>
+            <thead><tr><th style="width:32%">Range</th><th style="width:18%">Type</th><th>Notes</th></tr></thead>
             <tbody>
               <tr><td><code>10.0.0.0/8</code></td><td>Private</td><td>Class A, large networks</td></tr>
               <tr><td><code>172.16.0.0/12</code></td><td>Private</td><td>Class B (172.16-31.x)</td></tr>
@@ -616,7 +583,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
               <tr><td><code>127.0.0.0/8</code></td><td>Loopback</td><td>127.0.0.1 = localhost</td></tr>
               <tr><td><code>169.254.0.0/16</code></td><td>APIPA</td><td>Auto-assigned when DHCP fails</td></tr>
               <tr><td><code>224.0.0.0/4</code></td><td>Multicast</td><td>One-to-many delivery</td></tr>
-              <tr><td><code>0.0.0.0</code></td><td>Unspecified</td><td>Default route / all interfaces</td></tr>
+              <tr><td><code>0.0.0.0</code></td><td>Unspecified</td><td>Two distinct uses: binding (0.0.0.0:80 = listen on all interfaces) vs routing (0.0.0.0/0 = default route / gateway of last resort)</td></tr>
             </tbody>
           </table>
         </div>
@@ -652,6 +619,51 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>Ordering</td><td>Sequenced delivery guaranteed</td><td>Out-of-order delivery possible</td></tr>
           <tr><td>Speed</td><td>Slower (overhead from acks, windowing)</td><td>Faster, minimal overhead</td></tr>
           <tr><td>Use cases</td><td>HTTP/S, SSH, FTP, SMTP, RDP, databases</td><td>DNS, DHCP, VoIP, video streams, NTP</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub-heading" style="margin-top:20px">Network Troubleshooting Workflow</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Work through these steps in order - each layer rules out the one above it.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Command</th><th>What You're Checking</th></tr></thead>
+        <tbody>
+          <tr><td>1. Is the host up?</td><td><code>ping -c 4 &lt;target&gt;</code></td><td>Basic ICMP reachability - rules out total network failure</td></tr>
+          <tr><td>2. What path does traffic take?</td><td><code>traceroute &lt;target&gt;</code> / <code>tracert</code></td><td>Hop-by-hop path - find where packets drop or latency spikes</td></tr>
+          <tr><td>3. Does DNS resolve?</td><td><code>dig &lt;hostname&gt;</code> / <code>nslookup</code></td><td>Name resolution - wrong IP or NXDOMAIN means DNS problem</td></tr>
+          <tr><td>4. Is the port open?</td><td><code>nc -zv &lt;host&gt; &lt;port&gt;</code> / <code>Test-NetConnection</code></td><td>TCP connectivity to specific port - rules out firewall or service down</td></tr>
+          <tr><td>5. Is the service listening?</td><td><code>ss -tlnp</code> / <code>netstat -ano</code></td><td>What's bound to which port locally - service may not be started</td></tr>
+          <tr><td>6. What does the traffic look like?</td><td><code>tcpdump -i eth0 host &lt;target&gt;</code></td><td>Actual packet capture - see resets, retransmits, TLS failures</td></tr>
+          <tr><td>7. What do the logs say?</td><td><code>journalctl -u nginx -n 50</code> / <code>tail -f /var/log/syslog</code></td><td>Application and system errors - often the exact answer</td></tr>
+          <tr><td>8. Is a firewall blocking it?</td><td><code>iptables -L -n</code> / <code>ufw status</code> / <code>Get-NetFirewallRule</code></td><td>Local firewall rules - check both source and destination</td></tr>
+          <tr><td>9. Is MTU causing fragmentation?</td><td><code>ping -M do -s 1472 &lt;target&gt;</code></td><td>Test for MTU/fragmentation issues on VPN or tunnel paths</td></tr>
+          <tr><td>10. Is the cert valid?</td><td><code>openssl s_client -connect &lt;host&gt;:443</code></td><td>TLS handshake, cert expiry, chain validity - for HTTPS issues</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">HTTP Status Codes</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Meaning</th><th>Common Cause</th></tr></thead>
+        <tbody>
+          <tr><td><code>200</code></td><td>OK</td><td>Request succeeded</td></tr>
+          <tr><td><code>201</code></td><td>Created</td><td>POST succeeded, new resource created</td></tr>
+          <tr><td><code>204</code></td><td>No Content</td><td>Success, no body returned (DELETE, PUT)</td></tr>
+          <tr><td><code>301</code></td><td>Moved Permanently</td><td>URL changed forever - clients should update bookmarks</td></tr>
+          <tr><td><code>302</code></td><td>Found (Temporary Redirect)</td><td>Temporary redirect - client keeps using original URL</td></tr>
+          <tr><td><code>304</code></td><td>Not Modified</td><td>Cached version is still valid - no body sent</td></tr>
+          <tr><td><code>400</code></td><td>Bad Request</td><td>Malformed request syntax, invalid parameters</td></tr>
+          <tr><td><code>401</code></td><td>Unauthorized</td><td>Authentication required or failed</td></tr>
+          <tr><td><code>403</code></td><td>Forbidden</td><td>Authenticated but no permission - check ACLs, file permissions</td></tr>
+          <tr><td><code>404</code></td><td>Not Found</td><td>Resource doesn't exist at this URL</td></tr>
+          <tr><td><code>405</code></td><td>Method Not Allowed</td><td>Wrong HTTP verb (GET vs POST) for this endpoint</td></tr>
+          <tr><td><code>408</code></td><td>Request Timeout</td><td>Client too slow - network issue or overloaded server</td></tr>
+          <tr><td><code>429</code></td><td>Too Many Requests</td><td>Rate limit hit - back off and retry</td></tr>
+          <tr><td><code>500</code></td><td>Internal Server Error</td><td>Unhandled exception - check app logs</td></tr>
+          <tr><td><code>502</code></td><td>Bad Gateway</td><td>Upstream server returned invalid response - check backend/proxy</td></tr>
+          <tr><td><code>503</code></td><td>Service Unavailable</td><td>Server overloaded or down for maintenance</td></tr>
+          <tr><td><code>504</code></td><td>Gateway Timeout</td><td>Upstream server too slow - check backend latency and timeouts</td></tr>
         </tbody>
       </table>
     </div>
@@ -725,9 +737,9 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>3389</td><td>TCP</td><td>RDP</td><td>Remote Desktop - never expose to internet</td></tr>
           <tr><td>5432</td><td>TCP</td><td>PostgreSQL</td><td>Default Postgres port</td></tr>
           <tr><td>5900</td><td>TCP</td><td>VNC</td><td>Remote desktop - use only over VPN/tunnel</td></tr>
-          <tr><td>6379</td><td>TCP</td><td>Redis</td><td>No auth by default - bind to localhost</td></tr>
+          <tr><td>6379</td><td>TCP</td><td>Redis</td><td>Historically no auth by default - always bind to localhost and set requirepass before any exposure</td></tr>
           <tr><td>8080 / 8443</td><td>TCP</td><td>HTTP/S Alt</td><td>Dev servers, proxies, alt web services</td></tr>
-          <tr><td>27017</td><td>TCP</td><td>MongoDB</td><td>No auth by default - secure before exposing</td></tr>
+          <tr><td>27017</td><td>TCP</td><td>MongoDB</td><td>Historically no auth by default - modern versions enforce localhost binding; always enable auth and restrict access before exposing</td></tr>
         </tbody>
       </table>
     </div>
@@ -739,7 +751,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
         <tbody>
           <tr><td>IPSec / IKEv2</td><td>ESP / IKE</td><td>UDP 500 / 4500</td><td>Fast, native on most OS, preferred for site-to-site</td></tr>
           <tr><td>OpenVPN</td><td>TLS</td><td>UDP/TCP 1194</td><td>Flexible, open-source, common for remote access</td></tr>
-          <tr><td>WireGuard</td><td>UDP</td><td>51820</td><td>Modern, minimal code, fastest throughput</td></tr>
+          <tr><td>WireGuard</td><td>UDP</td><td>51820</td><td>Modern, minimal code, fastest throughput. Key-based auth (Curve25519) - no certificates or CA needed, unlike IPSec/OpenVPN</td></tr>
           <tr><td>SSL VPN</td><td>HTTPS</td><td>TCP 443</td><td>Works through firewalls, browser or client-based</td></tr>
           <tr><td>L2TP/IPSec</td><td>L2TP + ESP</td><td>UDP 1701 / 500 / 4500</td><td>Common legacy, double-encapsulation overhead; 4500 for NAT-T</td></tr>
           <tr><td>PPTP</td><td>GRE + TCP</td><td>TCP 1723</td><td>Obsolete - broken crypto, avoid</td></tr>
@@ -789,7 +801,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
               <tr><td><span class="badge badge-do">DO</span></td><td>Disable unused ports and services</td></tr>
               <tr><td><span class="badge badge-do">DO</span></td><td>Enable MFA / 2FA on all accounts</td></tr>
               <tr><td><span class="badge badge-do">DO</span></td><td>Apply least privilege (PoLP) everywhere</td></tr>
-              <tr><td><span class="badge badge-do">DO</span></td><td>Patch OS within 30 days of release</td></tr>
+              <tr><td><span class="badge badge-do">DO</span></td><td>Patch OS promptly - critical/zero-day: hours to days; standard patches: within 30 days</td></tr>
               <tr><td><span class="badge badge-do">DO</span></td><td>Enable host-based firewall (UFW/iptables)</td></tr>
               <tr><td><span class="badge badge-do">DO</span></td><td>Use key-based SSH auth, disable password auth</td></tr>
               <tr><td><span class="badge badge-do">DO</span></td><td>Disable root SSH login (PermitRootLogin no)</td></tr>
@@ -817,7 +829,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
               <tr><td>Ed25519</td><td>Asymmetric</td><td>Preferred for SSH keys, fast and secure</td></tr>
               <tr><td>SHA-256 / SHA-3</td><td>Hash</td><td>Use for integrity checks, digital signatures</td></tr>
               <tr><td>bcrypt / Argon2</td><td>Password hash</td><td>Argon2 is winner of Password Hashing Competition</td></tr>
-              <tr><td>TLS 1.3</td><td>Protocol</td><td>Only version to use - 1.0/1.1 deprecated, 1.2 legacy</td></tr>
+              <tr><td>TLS 1.3 / 1.2</td><td>Protocol</td><td>TLS 1.3 preferred (faster, mandatory forward secrecy); TLS 1.2 still acceptable with modern ciphers. 1.0/1.1 deprecated - disable immediately</td></tr>
             </tbody>
           </table>
         </div>
@@ -847,10 +859,10 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
     <div class="section-header">
       <span class="section-num">⑤</span>
       <h2>OS &amp; Commands</h2>
-      <p>Linux · Windows/PS · Storage · RAID · Backup</p>
+      <p>Linux · Windows/PS · Storage · RAID · Backup · AD</p>
     </div>
 
-    <div class="sub-heading">Linux - Process &amp; Performance</div>
+    <div class="sub-heading">Linux - Process &amp; Performance <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/bash/" target="_blank" style="color:var(--text3)">ss64.com/bash</a></span></div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Command</th><th>Description</th></tr></thead>
@@ -867,6 +879,27 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td class="copyable"><code>free -h</code><button class="copy-btn">copy</button></td><td>Memory usage in human-readable format</td></tr>
           <tr><td class="copyable"><code>vmstat 1</code><button class="copy-btn">copy</button></td><td>CPU/IO/memory stats every 1 second</td></tr>
           <tr><td class="copyable"><code>uptime</code><button class="copy-btn">copy</button></td><td>System uptime and load averages (1/5/15 min)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:16px">systemd Deep Dive</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>systemctl list-units --type=service --state=failed</code><button class="copy-btn">copy</button></td><td>Show all failed services - first thing to check after a reboot</td></tr>
+          <tr><td class="copyable"><code>systemctl list-units --type=service --state=running</code><button class="copy-btn">copy</button></td><td>All currently running services</td></tr>
+          <tr><td class="copyable"><code>systemctl disable --now nginx</code><button class="copy-btn">copy</button></td><td>Stop a service and prevent it starting on boot in one command</td></tr>
+          <tr><td class="copyable"><code>systemctl mask nginx</code><button class="copy-btn">copy</button></td><td>Completely prevent a service from starting - stronger than disable, blocks manual start too</td></tr>
+          <tr><td class="copyable"><code>systemctl cat nginx</code><button class="copy-btn">copy</button></td><td>Show the full unit file for a service - see ExecStart, dependencies, restart policy</td></tr>
+          <tr><td class="copyable"><code>systemctl daemon-reload</code><button class="copy-btn">copy</button></td><td>Reload unit files after editing - required before restarting a modified service</td></tr>
+          <tr><td class="copyable"><code>journalctl -u nginx -n 100 --no-pager</code><button class="copy-btn">copy</button></td><td>Last 100 log lines for a service without paging</td></tr>
+          <tr><td class="copyable"><code>journalctl -u nginx --since "1 hour ago"</code><button class="copy-btn">copy</button></td><td>Service logs from the last hour - accepts natural language time</td></tr>
+          <tr><td class="copyable"><code>journalctl -p err -b</code><button class="copy-btn">copy</button></td><td>Only error-level (and above) messages from current boot</td></tr>
+          <tr><td class="copyable"><code>journalctl -b -1</code><button class="copy-btn">copy</button></td><td>Logs from the previous boot - useful after a crash or unexpected reboot</td></tr>
+          <tr><td class="copyable"><code>journalctl --disk-usage</code><button class="copy-btn">copy</button></td><td>How much disk space journal logs are consuming</td></tr>
+          <tr><td class="copyable"><code>journalctl --vacuum-time=7d</code><button class="copy-btn">copy</button></td><td>Delete journal entries older than 7 days to free disk space</td></tr>
         </tbody>
       </table>
     </div>
@@ -907,6 +940,71 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td class="copyable"><code>du -sh /var/log/*</code><button class="copy-btn">copy</button></td><td>Size of each item in /var/log</td></tr>
           <tr><td class="copyable"><code>tar -czf out.tar.gz /dir</code><button class="copy-btn">copy</button></td><td>Create gzipped tarball of directory</td></tr>
           <tr><td class="copyable"><code>rsync -avz src/ dest/</code><button class="copy-btn">copy</button></td><td>Sync files with verbose output and compression</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Common Linux Config Files</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File</th><th>What it Controls</th></tr></thead>
+        <tbody>
+          <tr><td><code>/etc/hosts</code></td><td>Static hostname-to-IP mappings - checked before DNS, useful for local overrides</td></tr>
+          <tr><td><code>/etc/resolv.conf</code></td><td>DNS server addresses and search domains - often managed by NetworkManager or systemd-resolved</td></tr>
+          <tr><td><code>/etc/fstab</code></td><td>Filesystems mounted at boot - device, mount point, type, options, dump, fsck order</td></tr>
+          <tr><td><code>/etc/hostname</code></td><td>System hostname - change here then run <code>hostnamectl set-hostname</code> to apply</td></tr>
+          <tr><td><code>/etc/sudoers</code></td><td>Sudo access rules - always edit with <code>visudo</code> to prevent syntax errors locking you out</td></tr>
+          <tr><td><code>/etc/passwd</code></td><td>User accounts: username, UID, GID, home dir, shell - no passwords stored here</td></tr>
+          <tr><td><code>/etc/shadow</code></td><td>Hashed passwords and password policy per user - root-readable only</td></tr>
+          <tr><td><code>/etc/group</code></td><td>Group definitions and membership lists</td></tr>
+          <tr><td><code>/etc/ssh/sshd_config</code></td><td>SSH server config - PermitRootLogin, PasswordAuthentication, Port, AllowUsers</td></tr>
+          <tr><td><code>/etc/crontab</code></td><td>System-wide cron schedule - user crons live in <code>/var/spool/cron/crontabs/</code></td></tr>
+          <tr><td><code>/etc/cron.d/</code></td><td>Drop-in cron files for packages and services - same format as /etc/crontab</td></tr>
+          <tr><td><code>/etc/environment</code></td><td>System-wide environment variables set at login - plain KEY=value format, no export needed</td></tr>
+          <tr><td><code>/etc/profile.d/</code></td><td>Shell scripts sourced at login for all users - drop custom env vars and aliases here</td></tr>
+          <tr><td><code>/etc/logrotate.conf</code></td><td>Log rotation policy - frequency, retention count, compression settings</td></tr>
+          <tr><td><code>/etc/nsswitch.conf</code></td><td>Name service switch - controls lookup order for hosts, users, groups (files vs DNS vs LDAP)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">SSH Key Management</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command / File</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>ssh-keygen -t ed25519 -C "user@host"</code><button class="copy-btn">copy</button></td><td>Generate Ed25519 key pair - preferred over RSA for new keys</td></tr>
+          <tr><td class="copyable"><code>ssh-keygen -t rsa -b 4096 -C "user@host"</code><button class="copy-btn">copy</button></td><td>Generate 4096-bit RSA key pair - use when Ed25519 not supported</td></tr>
+          <tr><td class="copyable"><code>ssh-copy-id user@host</code><button class="copy-btn">copy</button></td><td>Copy public key to remote host's authorized_keys in one step</td></tr>
+          <tr><td class="copyable"><code>cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys</code><button class="copy-btn">copy</button></td><td>Manually append public key to authorized_keys (manual alternative)</td></tr>
+          <tr><td class="copyable"><code>eval $(ssh-agent -s) &amp;&amp; ssh-add ~/.ssh/id_ed25519</code><button class="copy-btn">copy</button></td><td>Start ssh-agent and load a key - avoids repeated passphrase prompts</td></tr>
+          <tr><td class="copyable"><code>ssh-add -l</code><button class="copy-btn">copy</button></td><td>List keys currently loaded in ssh-agent</td></tr>
+          <tr><td class="copyable"><code>ssh -J bastion user@target</code><button class="copy-btn">copy</button></td><td>ProxyJump - SSH through a bastion/jump host to reach internal servers</td></tr>
+          <tr><td class="copyable"><code>ssh -L 8080:internal:80 user@bastion</code><button class="copy-btn">copy</button></td><td>Local port forward - tunnel local 8080 through bastion to internal:80</td></tr>
+          <tr><td><code>~/.ssh/config</code></td><td>Per-user SSH config - define Host aliases, IdentityFile, ProxyJump, Port per host</td></tr>
+          <tr><td><code>~/.ssh/authorized_keys</code></td><td>Public keys allowed to authenticate to this account - must be chmod 600</td></tr>
+          <tr><td><code>~/.ssh/known_hosts</code></td><td>Fingerprints of hosts you've connected to - mismatch = MITM warning</td></tr>
+          <tr><td><code>/etc/ssh/sshd_config</code></td><td>Server-side SSH config - PermitRootLogin, PasswordAuthentication, AllowUsers</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Package Management</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task</th><th>apt (Debian/Ubuntu)</th><th>dnf/yum (RHEL/CentOS)</th><th>zypper (SUSE)</th></tr></thead>
+        <tbody>
+          <tr><td>Install package</td><td><code>apt install nginx</code></td><td><code>dnf install nginx</code></td><td><code>zypper install nginx</code></td></tr>
+          <tr><td>Remove package</td><td><code>apt remove nginx</code></td><td><code>dnf remove nginx</code></td><td><code>zypper remove nginx</code></td></tr>
+          <tr><td>Remove + config</td><td><code>apt purge nginx</code></td><td><code>dnf remove nginx</code></td><td><code>zypper remove --clean-deps nginx</code></td></tr>
+          <tr><td>Update all</td><td><code>apt update &amp;&amp; apt upgrade</code></td><td><code>dnf upgrade</code></td><td><code>zypper update</code></td></tr>
+          <tr><td>Search package</td><td><code>apt search nginx</code></td><td><code>dnf search nginx</code></td><td><code>zypper search nginx</code></td></tr>
+          <tr><td>Package info</td><td><code>apt show nginx</code></td><td><code>dnf info nginx</code></td><td><code>zypper info nginx</code></td></tr>
+          <tr><td>List installed</td><td><code>apt list --installed</code></td><td><code>dnf list installed</code></td><td><code>zypper packages --installed</code></td></tr>
+          <tr><td>Which pkg owns file</td><td><code>dpkg -S /usr/bin/nginx</code></td><td><code>rpm -qf /usr/sbin/nginx</code></td><td><code>rpm -qf /usr/sbin/nginx</code></td></tr>
+          <tr><td>List pkg files</td><td><code>dpkg -L nginx</code></td><td><code>rpm -ql nginx</code></td><td><code>rpm -ql nginx</code></td></tr>
+          <tr><td>Add repo</td><td><code>add-apt-repository ppa:x</code></td><td><code>dnf config-manager --add-repo URL</code></td><td><code>zypper addrepo URL alias</code></td></tr>
+          <tr><td>Clean cache</td><td><code>apt clean</code></td><td><code>dnf clean all</code></td><td><code>zypper clean</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -967,55 +1065,54 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
-    <div class="grid-2" style="margin-top:20px">
-      <div>
-        <div class="sub-heading">Windows / PowerShell</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td class="copyable"><code>Get-Process</code><button class="copy-btn">copy</button></td><td>List all running processes (PS)</td></tr>
-              <tr><td class="copyable"><code>Stop-Process -Name notepad</code><button class="copy-btn">copy</button></td><td>Kill process by name (PS)</td></tr>
-              <tr><td class="copyable"><code>Get-Service | Where Status -eq Running</code><button class="copy-btn">copy</button></td><td>List only running services (PS)</td></tr>
-              <tr><td class="copyable"><code>systeminfo</code><button class="copy-btn">copy</button></td><td>OS version, RAM, hotfixes, uptime</td></tr>
-              <tr><td class="copyable"><code>net user /domain</code><button class="copy-btn">copy</button></td><td>List domain users</td></tr>
-              <tr><td class="copyable"><code>net localgroup administrators</code><button class="copy-btn">copy</button></td><td>List local admins</td></tr>
-              <tr><td class="copyable"><code>Get-HotFix | Sort-Object InstalledOn -Descending</code><button class="copy-btn">copy</button></td><td>Installed Windows Updates and KBs, newest first</td></tr>
-              <tr><td class="copyable"><code>Get-ExecutionPolicy</code><button class="copy-btn">copy</button></td><td>Check current PowerShell script execution policy</td></tr>
-              <tr><td class="copyable"><code>Get-CimInstance Win32_OperatingSystem | select LastBootUpTime</code><button class="copy-btn">copy</button></td><td>When the system last rebooted</td></tr>
-              <tr><td class="copyable"><code>Get-WinEvent -LogName Security -MaxEvents 50</code><button class="copy-btn">copy</button></td><td>Recent Security event log entries (PS)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
-        <div class="sub-heading">RAID Types</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>RAID</th><th>Method</th><th>Min Disks</th><th>Fault Tolerance</th></tr></thead>
-            <tbody>
-              <tr><td>RAID 0</td><td>Striping</td><td>2</td><td>None - any disk failure = total loss</td></tr>
-              <tr><td>RAID 1</td><td>Mirroring</td><td>2</td><td>1 disk failure tolerated</td></tr>
-              <tr><td>RAID 5</td><td>Stripe + parity</td><td>3</td><td>1 disk failure tolerated</td></tr>
-              <tr><td>RAID 6</td><td>Stripe + dual parity</td><td>4</td><td>2 disk failures tolerated</td></tr>
-              <tr><td>RAID 10</td><td>Stripe of mirrors</td><td>4</td><td>1 per mirror pair</td></tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="sub-heading" style="margin-top:20px">PowerShell Essentials <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/ps/" target="_blank" style="color:var(--text3)">ss64.com/ps</a></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Get-Help Get-Process -Full</code><button class="copy-btn">copy</button></td><td>Full documentation for any cmdlet - add <code>-Examples</code> for just examples, <code>-Online</code> to open browser docs</td></tr>
+          <tr><td class="copyable"><code>Get-Help *network*</code><button class="copy-btn">copy</button></td><td>Wildcard search across all help topics - how you discover cmdlets you don't know yet</td></tr>
+          <tr><td class="copyable"><code>Update-Help</code><button class="copy-btn">copy</button></td><td>Download latest help files - run once after a fresh install, requires internet</td></tr>
+          <tr><td class="copyable"><code>Get-Command -Verb Get -Noun *DNS*</code><button class="copy-btn">copy</button></td><td>Find cmdlets by verb, noun, or wildcard - the right way to discover what's available</td></tr>
+          <tr><td class="copyable"><code>Get-Command -Module ActiveDirectory</code><button class="copy-btn">copy</button></td><td>List every cmdlet in a specific module</td></tr>
+          <tr><td class="copyable"><code>Get-Module -ListAvailable</code><button class="copy-btn">copy</button></td><td>All modules installed on the system, whether loaded or not</td></tr>
+          <tr><td class="copyable"><code>Import-Module ActiveDirectory</code><button class="copy-btn">copy</button></td><td>Load a module into the current session</td></tr>
+          <tr><td class="copyable"><code>Get-Process | Get-Member</code><button class="copy-btn">copy</button></td><td>Inspect every property and method on an object - essential for building pipelines</td></tr>
+          <tr><td class="copyable"><code>Get-Service | Select-Object -Property *</code><button class="copy-btn">copy</button></td><td>Reveal all properties on an object, not just the default display columns</td></tr>
+          <tr><td class="copyable"><code>Get-History</code><button class="copy-btn">copy</button></td><td>Command history for the current session with execution IDs</td></tr>
+          <tr><td class="copyable"><code>Invoke-History 42</code><button class="copy-btn">copy</button></td><td>Re-run a command by its history ID</td></tr>
+          <tr><td class="copyable"><code>Get-PSReadLineOption</code><button class="copy-btn">copy</button></td><td>View persistent history path - PSReadLine saves history across sessions by default</td></tr>
+          <tr><td class="copyable"><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code><button class="copy-btn">copy</button></td><td>Allow local scripts to run; remote scripts must be signed. Safest policy for daily use</td></tr>
+          <tr><td class="copyable"><code>Get-ExecutionPolicy -List</code><button class="copy-btn">copy</button></td><td>Show policy at every scope (MachinePolicy, UserPolicy, Process, CurrentUser, LocalMachine)</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-        <div class="sub-heading" style="margin-top:16px">Backup Strategy Types</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Type</th><th>What It Backs Up</th><th>Speed</th><th>Restore</th></tr></thead>
-            <tbody>
-              <tr><td>Full</td><td>All data every time</td><td>Slowest</td><td>Single set - fastest restore</td></tr>
-              <tr><td>Incremental</td><td>Changes since last backup (any)</td><td>Fastest</td><td>Need all incrementals + last full</td></tr>
-              <tr><td>Differential</td><td>Changes since last full only</td><td>Medium</td><td>Last full + latest differential</td></tr>
-              <tr><td>Snapshot</td><td>Point-in-time copy (CoW)</td><td>Instant</td><td>Instant rollback, storage overhead</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="sub-heading" style="margin-top:20px">Windows / PowerShell &amp; CMD <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/ps/" target="_blank" style="color:var(--text3)">ss64.com/ps</a> · <a href="https://ss64.com/nt/" target="_blank" style="color:var(--text3)">ss64.com/nt</a></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Get-Process</code><button class="copy-btn">copy</button></td><td>List all running processes (PS)</td></tr>
+          <tr><td class="copyable"><code>Stop-Process -Name notepad</code><button class="copy-btn">copy</button></td><td>Kill process by name (PS)</td></tr>
+          <tr><td class="copyable"><code>Get-Service | Where Status -eq Running</code><button class="copy-btn">copy</button></td><td>List only running services (PS)</td></tr>
+          <tr><td class="copyable"><code>systeminfo</code><button class="copy-btn">copy</button></td><td>OS version, RAM, hotfixes, uptime</td></tr>
+          <tr><td class="copyable"><code>net user /domain</code><button class="copy-btn">copy</button></td><td>List domain users</td></tr>
+          <tr><td class="copyable"><code>net localgroup administrators</code><button class="copy-btn">copy</button></td><td>List local admins</td></tr>
+          <tr><td class="copyable"><code>Get-HotFix | Sort-Object InstalledOn -Descending</code><button class="copy-btn">copy</button></td><td>Installed Windows Updates and KBs, newest first</td></tr>
+          <tr><td class="copyable"><code>Get-ExecutionPolicy</code><button class="copy-btn">copy</button></td><td>Check current PowerShell script execution policy</td></tr>
+          <tr><td class="copyable"><code>Get-CimInstance Win32_OperatingSystem | select LastBootUpTime</code><button class="copy-btn">copy</button></td><td>When the system last rebooted</td></tr>
+          <tr><td class="copyable"><code>Get-WinEvent -LogName Security -MaxEvents 50</code><button class="copy-btn">copy</button></td><td>Recent Security event log entries (PS)</td></tr>
+          <tr><td class="copyable"><code>Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} -MaxEvents 20</code><button class="copy-btn">copy</button></td><td>Failed logon events only - faster and more precise than Where-Object filtering</td></tr>
+          <tr><td class="copyable"><code>Test-NetConnection -ComputerName dc01 -Port 443</code><button class="copy-btn">copy</button></td><td>Test TCP connectivity to a host/port - modern replacement for telnet port tests</td></tr>
+          <tr><td class="copyable"><code>Invoke-Command -ComputerName srv01,srv02 -ScriptBlock { Get-Service spooler }</code><button class="copy-btn">copy</button></td><td>Run commands on one or many remote machines simultaneously over WinRM</td></tr>
+          <tr><td class="copyable"><code>Enter-PSSession -ComputerName srv01</code><button class="copy-btn">copy</button></td><td>Interactive remote PowerShell session - like SSH for Windows</td></tr>
+          <tr><td class="copyable"><code>Get-Printer -ComputerName printserver</code><button class="copy-btn">copy</button></td><td>List all printers on a print server</td></tr>
+          <tr><td class="copyable"><code>Add-Printer -Name "HP-Floor2" -DriverName "HP Universal" -PortName "IP_10.0.1.50"</code><button class="copy-btn">copy</button></td><td>Add a network printer from CLI - no GUI needed</td></tr>
+          <tr><td class="copyable"><code>Install-Module PSWindowsUpdate -Force; Get-WindowsUpdate</code><button class="copy-btn">copy</button></td><td>Check pending Windows Updates from PowerShell - requires PSWindowsUpdate module</td></tr>
+          <tr><td class="copyable"><code>Install-WindowsUpdate -AcceptAll -AutoReboot</code><button class="copy-btn">copy</button></td><td>Install all available updates and reboot if required (PSWindowsUpdate module)</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="sub-heading" style="margin-top:20px">Windows Networking</div>
@@ -1048,6 +1145,61 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td class="copyable"><code>Get-Service | where Status -eq 'StartPending'</code><button class="copy-btn">copy</button></td><td>Find services stuck in Starting - indicates a hung or deadlocked service</td></tr>
           <tr><td class="copyable"><code>Restart-Service -Name sshd</code><button class="copy-btn">copy</button></td><td>Restart a named service by its service name (not display name)</td></tr>
           <tr><td class="copyable"><code>Get-CimInstance Win32_Service | select Name, PathName, StartMode</code><button class="copy-btn">copy</button></td><td>Service binary path and start mode - useful for spotting malicious service installs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px">
+      <div>
+        <div class="sub-heading">RAID Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>RAID</th><th>Method</th><th>Min Disks</th><th>Fault Tolerance</th></tr></thead>
+            <tbody>
+              <tr><td>RAID 0</td><td>Striping</td><td>2</td><td>None — any disk failure = total loss</td></tr>
+              <tr><td>RAID 1</td><td>Mirroring</td><td>2</td><td>1 disk failure tolerated</td></tr>
+              <tr><td>RAID 5</td><td>Stripe + parity</td><td>3</td><td>1 disk failure tolerated</td></tr>
+              <tr><td>RAID 6</td><td>Stripe + dual parity</td><td>4</td><td>2 disk failures tolerated</td></tr>
+              <tr><td>RAID 10</td><td>Stripe of mirrors</td><td>4</td><td>1 per mirror pair</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sub-heading">Backup Strategy Types</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>What It Backs Up</th><th>Speed</th><th>Restore</th></tr></thead>
+            <tbody>
+              <tr><td>Full</td><td>All data every time</td><td>Slowest</td><td>Single set — fastest restore</td></tr>
+              <tr><td>Incremental</td><td>Changes since last backup (any)</td><td>Fastest</td><td>Need all incrementals + last full</td></tr>
+              <tr><td>Differential</td><td>Changes since last full only</td><td>Medium</td><td>Last full + latest differential</td></tr>
+              <tr><td>Snapshot</td><td>Point-in-time copy (CoW)</td><td>Instant</td><td>Instant rollback, storage overhead</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Active Directory</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Get-ADUser -Identity jsmith -Properties *</code><button class="copy-btn">copy</button></td><td>Full user details: last logon, locked status, group membership</td></tr>
+          <tr><td class="copyable"><code>Get-ADUser -Filter {Enabled -eq $true} -Properties LastLogonDate | Where {$_.LastLogonDate -lt (Get-Date).AddDays(-90)}</code><button class="copy-btn">copy</button></td><td>Active accounts with no logon in 90+ days — stale account audit</td></tr>
+          <tr><td class="copyable"><code>Set-ADUser -Identity jsmith -Enabled $false</code><button class="copy-btn">copy</button></td><td>Disable a user account</td></tr>
+          <tr><td class="copyable"><code>Unlock-ADAccount -Identity jsmith</code><button class="copy-btn">copy</button></td><td>Unlock a locked-out account</td></tr>
+          <tr><td class="copyable"><code>Set-ADAccountPassword -Identity jsmith -Reset -NewPassword (ConvertTo-SecureString "P@ssw0rd!" -AsPlainText -Force)</code><button class="copy-btn">copy</button></td><td>Reset a user password from PowerShell</td></tr>
+          <tr><td class="copyable"><code>Get-ADGroupMember -Identity "Domain Admins" -Recursive</code><button class="copy-btn">copy</button></td><td>List group members including nested members</td></tr>
+          <tr><td class="copyable"><code>Add-ADGroupMember -Identity "VPN Users" -Members jsmith</code><button class="copy-btn">copy</button></td><td>Add a user to a group</td></tr>
+          <tr><td class="copyable"><code>Get-ADComputer -Filter * -Properties LastLogonDate | Sort LastLogonDate</code><button class="copy-btn">copy</button></td><td>All computers sorted by last logon — spot stale machine accounts</td></tr>
+          <tr><td class="copyable"><code>Test-ComputerSecureChannel -Repair</code><button class="copy-btn">copy</button></td><td>Fix broken domain trust without removing from domain</td></tr>
+          <tr><td class="copyable"><code>Reset-ComputerMachinePassword</code><button class="copy-btn">copy</button></td><td>Fixes "trust relationship failed" — no domain rejoin needed</td></tr>
+          <tr><td class="copyable"><code>gpupdate /force</code><button class="copy-btn">copy</button></td><td>Force immediate Group Policy refresh</td></tr>
+          <tr><td class="copyable"><code>gpresult /r</code><button class="copy-btn">copy</button></td><td>Show applied GPOs for current user and computer (RSoP)</td></tr>
+          <tr><td class="copyable"><code>dcdiag /test:replications</code><button class="copy-btn">copy</button></td><td>Test AD replication health across domain controllers</td></tr>
+          <tr><td class="copyable"><code>repadmin /replsummary</code><button class="copy-btn">copy</button></td><td>Replication summary — spot failing DC partners quickly</td></tr>
         </tbody>
       </table>
     </div>
@@ -1157,6 +1309,23 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
         </div>
       </div>
     </div>
+
+    <div class="sub-heading" style="margin-top:20px">Monitoring Platforms</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>Type</th><th>Best For</th></tr></thead>
+        <tbody>
+          <tr><td>Zabbix</td><td>Open source, agent-based</td><td>Full infrastructure monitoring - servers, network, VMs, SNMP. Self-hosted, no license cost</td></tr>
+          <tr><td>PRTG</td><td>Commercial, agentless</td><td>Windows-centric environments, easy setup, strong network/SNMP monitoring. Licensed by sensor count</td></tr>
+          <tr><td>Nagios / Icinga</td><td>Open source, plugin-based</td><td>Highly customisable, large plugin ecosystem. Icinga2 is the modern fork with better config and clustering</td></tr>
+          <tr><td>Grafana + Prometheus</td><td>Open source, metrics stack</td><td>Modern cloud-native monitoring - Prometheus scrapes metrics, Grafana visualises. Standard in Kubernetes environments</td></tr>
+          <tr><td>Datadog</td><td>SaaS</td><td>Full-stack observability - infrastructure, APM, logs, synthetics. Expensive but minimal setup overhead</td></tr>
+          <tr><td>Elastic Stack (ELK)</td><td>Open source / SaaS</td><td>Log aggregation and search at scale - Elasticsearch + Logstash + Kibana. Strong for SIEM use cases</td></tr>
+          <tr><td>Graylog</td><td>Open source / commercial</td><td>Centralised log management - easier to operate than ELK for log-focused use cases</td></tr>
+          <tr><td>Uptime Kuma</td><td>Open source, self-hosted</td><td>Lightweight uptime/status monitoring with a clean UI - good for small teams or personal use</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- ⑦ CERTIFICATES & FIREWALL ─────────────── -->
@@ -1167,46 +1336,41 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       <p>OpenSSL · UFW · iptables</p>
     </div>
 
-    <div class="grid-2">
-      <div>
-        <div class="sub-heading">OpenSSL Certificate Commands</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
-            <tbody>
-              <tr><td class="copyable"><code>openssl x509 -in cert.pem -text -noout</code><button class="copy-btn">copy</button></td><td>Inspect cert: expiry, SAN, issuer, subject</td></tr>
-              <tr><td class="copyable"><code>openssl req -new -key key.pem -out csr.pem</code><button class="copy-btn">copy</button></td><td>Generate CSR from existing private key</td></tr>
-              <tr><td class="copyable"><code>openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365</code><button class="copy-btn">copy</button></td><td>Self-signed cert with new 4096-bit RSA key</td></tr>
-              <tr><td class="copyable"><code>openssl verify -CAfile ca.pem cert.pem</code><button class="copy-btn">copy</button></td><td>Verify cert chain against a CA bundle</td></tr>
-              <tr><td class="copyable"><code>openssl s_client -connect host:443</code><button class="copy-btn">copy</button></td><td>Test TLS handshake, view cert chain live</td></tr>
-              <tr><td class="copyable"><code>openssl pkcs12 -export -out bundle.pfx</code><button class="copy-btn">copy</button></td><td>Export cert + key to PFX/PKCS12 format</td></tr>
-              <tr><td class="copyable"><code>openssl dhparam -out dh.pem 2048</code><button class="copy-btn">copy</button></td><td>Generate Diffie-Hellman params for TLS</td></tr>
-              <tr><td class="copyable"><code>certbot renew --dry-run</code><button class="copy-btn">copy</button></td><td>Test Let's Encrypt auto-renewal (Certbot)</td></tr>
-              <tr><td class="copyable"><code>certbot certonly --nginx -d example.com</code><button class="copy-btn">copy</button></td><td>Issue/renew cert for nginx domain</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
-        <div class="sub-heading">UFW / iptables Rules</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Command</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td class="copyable"><code>ufw enable</code><button class="copy-btn">copy</button></td><td>Activate UFW firewall</td></tr>
-              <tr><td class="copyable"><code>ufw status verbose</code><button class="copy-btn">copy</button></td><td>Show all rules with details</td></tr>
-              <tr><td class="copyable"><code>ufw allow 22/tcp</code><button class="copy-btn">copy</button></td><td>Allow SSH (TCP port 22)</td></tr>
-              <tr><td class="copyable"><code>ufw allow from 10.0.0.0/8</code><button class="copy-btn">copy</button></td><td>Allow all traffic from subnet</td></tr>
-              <tr><td class="copyable"><code>ufw deny 23</code><button class="copy-btn">copy</button></td><td>Block Telnet port</td></tr>
-              <tr><td class="copyable"><code>ufw delete allow 80/tcp</code><button class="copy-btn">copy</button></td><td>Remove a specific allow rule</td></tr>
-              <tr><td class="copyable"><code>iptables -L -n -v</code><button class="copy-btn">copy</button></td><td>List all iptables rules with packet counts</td></tr>
-              <tr><td class="copyable"><code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code><button class="copy-btn">copy</button></td><td>Accept HTTPS inbound traffic</td></tr>
-              <tr><td class="copyable"><code>iptables -A INPUT -j DROP</code><button class="copy-btn">copy</button></td><td>Drop all other inbound (default deny)</td></tr>
-              <tr><td class="copyable"><code>iptables-save &gt; /etc/iptables.rules</code><button class="copy-btn">copy</button></td><td>Persist iptables rules across reboots</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="sub-heading">OpenSSL Certificate Commands</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>openssl x509 -in cert.pem -text -noout</code><button class="copy-btn">copy</button></td><td>Inspect cert: expiry, SAN, issuer, subject</td></tr>
+          <tr><td class="copyable"><code>openssl req -new -key key.pem -out csr.pem</code><button class="copy-btn">copy</button></td><td>Generate CSR from existing private key</td></tr>
+          <tr><td class="copyable"><code>openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365</code><button class="copy-btn">copy</button></td><td>Self-signed cert with new 4096-bit RSA key</td></tr>
+          <tr><td class="copyable"><code>openssl verify -CAfile ca.pem cert.pem</code><button class="copy-btn">copy</button></td><td>Verify cert chain against a CA bundle</td></tr>
+          <tr><td class="copyable"><code>openssl s_client -connect host:443</code><button class="copy-btn">copy</button></td><td>Test TLS handshake, view cert chain live</td></tr>
+          <tr><td class="copyable"><code>openssl pkcs12 -export -out bundle.pfx</code><button class="copy-btn">copy</button></td><td>Export cert + key to PFX/PKCS12 format</td></tr>
+          <tr><td class="copyable"><code>openssl dhparam -out dh.pem 2048</code><button class="copy-btn">copy</button></td><td>Generate Diffie-Hellman params for TLS</td></tr>
+          <tr><td class="copyable"><code>certbot renew --dry-run</code><button class="copy-btn">copy</button></td><td>Test Let's Encrypt auto-renewal (Certbot)</td></tr>
+          <tr><td class="copyable"><code>certbot certonly --nginx -d example.com</code><button class="copy-btn">copy</button></td><td>Issue/renew cert for nginx domain</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">UFW / iptables Rules</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Action</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>ufw enable</code><button class="copy-btn">copy</button></td><td>Activate UFW firewall</td></tr>
+          <tr><td class="copyable"><code>ufw status verbose</code><button class="copy-btn">copy</button></td><td>Show all rules with details</td></tr>
+          <tr><td class="copyable"><code>ufw allow 22/tcp</code><button class="copy-btn">copy</button></td><td>Allow SSH (TCP port 22)</td></tr>
+          <tr><td class="copyable"><code>ufw allow from 10.0.0.0/8</code><button class="copy-btn">copy</button></td><td>Allow all traffic from subnet</td></tr>
+          <tr><td class="copyable"><code>ufw deny 23</code><button class="copy-btn">copy</button></td><td>Block Telnet port</td></tr>
+          <tr><td class="copyable"><code>ufw delete allow 80/tcp</code><button class="copy-btn">copy</button></td><td>Remove a specific allow rule</td></tr>
+          <tr><td class="copyable"><code>iptables -L -n -v</code><button class="copy-btn">copy</button></td><td>List all iptables rules with packet counts</td></tr>
+          <tr><td class="copyable"><code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code><button class="copy-btn">copy</button></td><td>Accept HTTPS inbound traffic</td></tr>
+          <tr><td class="copyable"><code>iptables -A INPUT -j DROP</code><button class="copy-btn">copy</button></td><td>Drop all other inbound (default deny)</td></tr>
+          <tr><td class="copyable"><code>iptables-save &gt; /etc/iptables.rules</code><button class="copy-btn">copy</button></td><td>Persist iptables rules across reboots</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -1215,59 +1379,215 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
     <div class="section-header">
       <span class="section-num">⑧</span>
       <h2>DevOps Tools</h2>
-      <p>Docker · Git · Kubernetes basics · IaC</p>
+      <p>Git · Docker · kubectl · IaC</p>
     </div>
 
+    <!-- GIT ─────────────────────────────────────── -->
+    <div class="sub-heading">Git</div>
     <div class="grid-2">
       <div>
-        <div class="sub-heading">Docker Essential Commands</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td class="copyable"><code>docker build -t name:tag .</code><button class="copy-btn">copy</button></td><td>Build image from Dockerfile in current dir</td></tr>
-              <tr><td class="copyable"><code>docker run -d -p 80:80 --name c nginx</code><button class="copy-btn">copy</button></td><td>Run detached container with port mapping</td></tr>
-              <tr><td class="copyable"><code>docker ps -a</code><button class="copy-btn">copy</button></td><td>List all containers (running + stopped)</td></tr>
-              <tr><td class="copyable"><code>docker exec -it &lt;id&gt; bash</code><button class="copy-btn">copy</button></td><td>Open interactive shell in running container</td></tr>
-              <tr><td class="copyable"><code>docker logs -f &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Follow container log output</td></tr>
-              <tr><td class="copyable"><code>docker stop &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Gracefully stop a container (SIGTERM)</td></tr>
-              <tr><td class="copyable"><code>docker rm &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Remove stopped container</td></tr>
-              <tr><td class="copyable"><code>docker images</code><button class="copy-btn">copy</button></td><td>List locally stored images</td></tr>
-              <tr><td class="copyable"><code>docker rmi name:tag</code><button class="copy-btn">copy</button></td><td>Delete a local image</td></tr>
-              <tr><td class="copyable"><code>docker pull nginx:alpine</code><button class="copy-btn">copy</button></td><td>Pull image from Docker Hub</td></tr>
-              <tr><td class="copyable"><code>docker push registry/img:tag</code><button class="copy-btn">copy</button></td><td>Push image to registry</td></tr>
-              <tr><td class="copyable"><code>docker-compose up -d</code><button class="copy-btn">copy</button></td><td>Start all services in docker-compose.yml</td></tr>
-              <tr><td class="copyable"><code>docker system prune -af</code><button class="copy-btn">copy</button></td><td>Remove all unused containers, images, networks</td></tr>
-              <tr><td class="copyable"><code>docker inspect &lt;id&gt;</code><button class="copy-btn">copy</button></td><td>Full JSON metadata for container/image</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
-        <div class="sub-heading">Git Essentials</div>
+        <div class="group-label">Core Workflow</div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Command</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td class="copyable"><code>git init</code><button class="copy-btn">copy</button></td><td>Initialize new local repository</td></tr>
-              <tr><td class="copyable"><code>git clone &lt;url&gt;</code><button class="copy-btn">copy</button></td><td>Clone remote repository locally</td></tr>
+              <tr><td class="copyable"><code>git remote add origin &lt;url&gt;</code><button class="copy-btn">copy</button></td><td>Link local repo to remote</td></tr>
               <tr><td class="copyable"><code>git status</code><button class="copy-btn">copy</button></td><td>Show working tree and staging area status</td></tr>
-              <tr><td class="copyable"><code>git add -p</code><button class="copy-btn">copy</button></td><td>Interactively stage chunks of changes</td></tr>
+              <tr><td class="copyable"><code>git add .</code><button class="copy-btn">copy</button></td><td>Stage all changes in current directory</td></tr>
               <tr><td class="copyable"><code>git commit -m "message"</code><button class="copy-btn">copy</button></td><td>Commit staged changes with message</td></tr>
+              <tr><td class="copyable"><code>git log --oneline</code><button class="copy-btn">copy</button></td><td>Compact one-line commit history</td></tr>
               <tr><td class="copyable"><code>git push origin main</code><button class="copy-btn">copy</button></td><td>Push local commits to remote</td></tr>
-              <tr><td class="copyable"><code>git pull --rebase</code><button class="copy-btn">copy</button></td><td>Fetch and rebase onto remote changes</td></tr>
-              <tr><td class="copyable"><code>git branch -a</code><button class="copy-btn">copy</button></td><td>List all local and remote branches</td></tr>
-              <tr><td class="copyable"><code>git checkout -b feature/x</code><button class="copy-btn">copy</button></td><td>Create and switch to new branch</td></tr>
-              <tr><td class="copyable"><code>git merge --no-ff feature/x</code><button class="copy-btn">copy</button></td><td>Merge feature branch, preserve history</td></tr>
-              <tr><td class="copyable"><code>git stash pop</code><button class="copy-btn">copy</button></td><td>Apply most recent stash and remove it</td></tr>
-              <tr><td class="copyable"><code>git log --oneline --graph</code><button class="copy-btn">copy</button></td><td>Compact visual branch history</td></tr>
-              <tr><td class="copyable"><code>git reset HEAD~1</code><button class="copy-btn">copy</button></td><td>Undo last commit, keep changes staged</td></tr>
-              <tr><td class="copyable"><code>git revert &lt;hash&gt;</code><button class="copy-btn">copy</button></td><td>Create new commit that undoes a past commit</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Sync</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>git fetch</code><button class="copy-btn">copy</button></td><td>Download remote changes without merging</td></tr>
+              <tr><td class="copyable"><code>git pull</code><button class="copy-btn">copy</button></td><td>Fetch and merge remote changes</td></tr>
+              <tr><td class="copyable"><code>git pull --rebase</code><button class="copy-btn">copy</button></td><td>Fetch and rebase onto remote (cleaner history)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="group-label">Branching</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>git branch</code><button class="copy-btn">copy</button></td><td>List local branches</td></tr>
+              <tr><td class="copyable"><code>git branch -av</code><button class="copy-btn">copy</button></td><td>List all branches with last commit</td></tr>
+              <tr><td class="copyable"><code>git switch -c new-branch</code><button class="copy-btn">copy</button></td><td>Create and switch to new branch</td></tr>
+              <tr><td class="copyable"><code>git switch main</code><button class="copy-btn">copy</button></td><td>Switch back to main branch</td></tr>
+              <tr><td class="copyable"><code>git merge feature-branch</code><button class="copy-btn">copy</button></td><td>Merge feature branch into current branch</td></tr>
+              <tr><td class="copyable"><code>git branch -d branch-name</code><button class="copy-btn">copy</button></td><td>Delete merged branch</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Undo</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>git restore &lt;file&gt;</code><button class="copy-btn">copy</button></td><td>Discard working directory changes to file</td></tr>
+              <tr><td class="copyable"><code>git restore --staged &lt;file&gt;</code><button class="copy-btn">copy</button></td><td>Unstage a file (keep working copy)</td></tr>
+              <tr><td class="copyable"><code>git revert &lt;commit&gt;</code><button class="copy-btn">copy</button></td><td>Create new commit that undoes a past commit</td></tr>
+              <tr><td class="copyable"><code>git switch --detach &lt;commit&gt;</code><button class="copy-btn">copy</button></td><td>Inspect repo at a past commit (read-only)</td></tr>
+              <tr><td class="copyable"><code>git switch main</code><button class="copy-btn">copy</button></td><td>Return from detached HEAD to main</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCKER ──────────────────────────────────── -->
+    <div class="sub-heading" style="margin-top:24px">Docker</div>
+    <div class="grid-2">
+      <div>
+        <div class="group-label">Core Workflow</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker run -d -p 8080:80 --name web nginx</code><button class="copy-btn">copy</button></td><td>Run detached container, map host:container port</td></tr>
+              <tr><td class="copyable"><code>docker ps</code><button class="copy-btn">copy</button></td><td>List running containers</td></tr>
+              <tr><td class="copyable"><code>docker ps -a</code><button class="copy-btn">copy</button></td><td>List all containers (running + stopped)</td></tr>
+              <tr><td class="copyable"><code>docker stop web</code><button class="copy-btn">copy</button></td><td>Gracefully stop container (SIGTERM)</td></tr>
+              <tr><td class="copyable"><code>docker rm web</code><button class="copy-btn">copy</button></td><td>Remove stopped container</td></tr>
+              <tr><td class="copyable"><code>docker exec -it web /bin/bash</code><button class="copy-btn">copy</button></td><td>Open interactive shell in running container</td></tr>
+              <tr><td class="copyable"><code>docker logs -f web</code><button class="copy-btn">copy</button></td><td>Stream live log output from container</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Volumes &amp; Ports</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker run -p 8080:80 nginx</code><button class="copy-btn">copy</button></td><td>Map host port 8080 → container port 80</td></tr>
+              <tr><td class="copyable"><code>docker run -v /host:/container nginx</code><button class="copy-btn">copy</button></td><td>Bind-mount host directory into container</td></tr>
+              <tr><td class="copyable"><code>docker volume ls</code><button class="copy-btn">copy</button></td><td>List all named volumes</td></tr>
+              <tr><td class="copyable"><code>docker volume create data</code><button class="copy-btn">copy</button></td><td>Create a named volume</td></tr>
+              <tr><td class="copyable"><code>docker volume prune</code><button class="copy-btn">copy</button></td><td>Remove all unused volumes</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Docker Compose</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker compose up -d</code><button class="copy-btn">copy</button></td><td>Start all services in docker-compose.yml (detached)</td></tr>
+              <tr><td class="copyable"><code>docker compose down</code><button class="copy-btn">copy</button></td><td>Stop and remove containers, networks</td></tr>
+              <tr><td class="copyable"><code>docker compose ps</code><button class="copy-btn">copy</button></td><td>List status of compose services</td></tr>
+              <tr><td class="copyable"><code>docker compose logs -f</code><button class="copy-btn">copy</button></td><td>Stream logs from all compose services</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="group-label">Images</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker images</code><button class="copy-btn">copy</button></td><td>List locally stored images</td></tr>
+              <tr><td class="copyable"><code>docker pull nginx</code><button class="copy-btn">copy</button></td><td>Pull image from Docker Hub</td></tr>
+              <tr><td class="copyable"><code>docker build -t myapp:1 .</code><button class="copy-btn">copy</button></td><td>Build image from Dockerfile in current dir</td></tr>
+              <tr><td class="copyable"><code>docker tag myapp:1 myrepo/myapp:latest</code><button class="copy-btn">copy</button></td><td>Tag image for registry push</td></tr>
+              <tr><td class="copyable"><code>docker push myrepo/myapp:latest</code><button class="copy-btn">copy</button></td><td>Push image to registry</td></tr>
+              <tr><td class="copyable"><code>docker rmi myapp:1</code><button class="copy-btn">copy</button></td><td>Delete local image</td></tr>
+              <tr><td class="copyable"><code>docker image prune</code><button class="copy-btn">copy</button></td><td>Remove dangling (untagged) images</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Troubleshooting</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>docker logs -f container</code><button class="copy-btn">copy</button></td><td>Stream live logs</td></tr>
+              <tr><td class="copyable"><code>docker exec -it container sh</code><button class="copy-btn">copy</button></td><td>Shell into running container (sh fallback)</td></tr>
+              <tr><td class="copyable"><code>docker inspect container</code><button class="copy-btn">copy</button></td><td>Full JSON metadata: network, mounts, env</td></tr>
+              <tr><td class="copyable"><code>docker stats</code><button class="copy-btn">copy</button></td><td>Live CPU/memory/net/disk usage per container</td></tr>
+              <tr><td class="copyable"><code>docker system df</code><button class="copy-btn">copy</button></td><td>Show disk usage by images, containers, volumes</td></tr>
+              <tr><td class="copyable"><code>docker system prune</code><button class="copy-btn">copy</button></td><td>Remove all stopped containers, unused images/networks</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KUBERNETES ──────────────────────────────── -->
+    <div class="sub-heading" style="margin-top:24px">kubectl &nbsp;<a href="https://kubernetes.io/docs/reference/kubectl/quick-reference/" target="_blank" rel="noopener" style="font-size:0.75rem;font-weight:400;opacity:0.7">↗ kubernetes.io</a></div>
+    <div class="grid-2">
+      <div>
+        <div class="group-label">Core</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>kubectl get pods</code><button class="copy-btn">copy</button></td><td>List pods in current namespace</td></tr>
+              <tr><td class="copyable"><code>kubectl get nodes</code><button class="copy-btn">copy</button></td><td>List all nodes and their status</td></tr>
+              <tr><td class="copyable"><code>kubectl get all</code><button class="copy-btn">copy</button></td><td>List all common resources in namespace</td></tr>
+              <tr><td class="copyable"><code>kubectl describe pod &lt;pod&gt;</code><button class="copy-btn">copy</button></td><td>Detailed info: events, limits, conditions</td></tr>
+              <tr><td class="copyable"><code>kubectl logs &lt;pod&gt;</code><button class="copy-btn">copy</button></td><td>Print logs from a pod</td></tr>
+              <tr><td class="copyable"><code>kubectl logs -f &lt;pod&gt;</code><button class="copy-btn">copy</button></td><td>Stream live logs from a pod</td></tr>
+              <tr><td class="copyable"><code>kubectl exec -it &lt;pod&gt; -- /bin/sh</code><button class="copy-btn">copy</button></td><td>Open interactive shell inside pod</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Deployments</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>kubectl apply -f app.yaml</code><button class="copy-btn">copy</button></td><td>Create or update resources from YAML</td></tr>
+              <tr><td class="copyable"><code>kubectl delete -f app.yaml</code><button class="copy-btn">copy</button></td><td>Delete resources defined in YAML</td></tr>
+              <tr><td class="copyable"><code>kubectl get deployments</code><button class="copy-btn">copy</button></td><td>List deployments in current namespace</td></tr>
+              <tr><td class="copyable"><code>kubectl rollout status deployment/app</code><button class="copy-btn">copy</button></td><td>Watch rollout progress</td></tr>
+              <tr><td class="copyable"><code>kubectl rollout restart deployment/app</code><button class="copy-btn">copy</button></td><td>Trigger rolling restart (picks up new config/image)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Scaling</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>kubectl scale deployment app --replicas=3</code><button class="copy-btn">copy</button></td><td>Scale deployment to N replicas</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="group-label">Debugging</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>kubectl get events</code><button class="copy-btn">copy</button></td><td>Recent cluster events (failures, pulls, restarts)</td></tr>
+              <tr><td class="copyable"><code>kubectl describe pod &lt;pod&gt;</code><button class="copy-btn">copy</button></td><td>Events + resource limits + container states</td></tr>
+              <tr><td class="copyable"><code>kubectl top pods</code><button class="copy-btn">copy</button></td><td>Live CPU/memory usage per pod</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="group-label" style="margin-top:12px">Context</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="copyable"><code>kubectl config get-contexts</code><button class="copy-btn">copy</button></td><td>List all kubeconfig contexts (clusters)</td></tr>
+              <tr><td class="copyable"><code>kubectl config use-context &lt;context&gt;</code><button class="copy-btn">copy</button></td><td>Switch active cluster/context</td></tr>
             </tbody>
           </table>
         </div>
 
-        <div class="sub-heading" style="margin-top:16px">DevOps Tool Landscape</div>
+        <div class="group-label" style="margin-top:12px">DevOps Tool Landscape</div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Category</th><th>Tools</th></tr></thead>
@@ -1532,10 +1852,104 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
     </p>
   </section>
 
+  <!-- ⑫ M365 & ENTRA ID ──────────────────────── -->
+  <section class="section" id="m365" style="--sec-color:#0078D4">
+    <div class="section-header">
+      <span class="section-num">⑫</span>
+      <h2>M365 &amp; Entra ID</h2>
+      <p>Identity · Graph PowerShell · Exchange Online · Intune</p>
+    </div>
+
+    <div class="sub-heading">Entra ID Core Concepts</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>What it Is</th><th>Key Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Tenant</td><td>Your organisation's dedicated Entra ID instance</td><td>Identified by a tenant ID (GUID) and domain (contoso.onmicrosoft.com)</td></tr>
+          <tr><td>User</td><td>Person or shared account in the directory</td><td>Can be cloud-only or synced from on-prem AD via Entra Connect</td></tr>
+          <tr><td>Service Principal</td><td>Identity for an application or automated process</td><td>Like a service account, but for apps - has its own permissions</td></tr>
+          <tr><td>App Registration</td><td>How you register an app to use Entra ID auth</td><td>Creates a service principal in your tenant - defines API permissions</td></tr>
+          <tr><td>Managed Identity</td><td>Auto-managed service principal for Azure resources</td><td>No credentials to manage - Azure handles rotation. Use this over service accounts for Azure workloads</td></tr>
+          <tr><td>Entra ID Roles vs Azure RBAC</td><td>Two separate role systems</td><td>Entra roles control directory objects (users, groups, apps). Azure RBAC controls Azure resources (VMs, storage). Global Admin != Owner</td></tr>
+          <tr><td>Conditional Access</td><td>Policy engine for access decisions</td><td>If user + location + device + app + risk = conditions then grant/block/MFA</td></tr>
+          <tr><td>PIM (Privileged Identity Management)</td><td>Just-in-time privileged access</td><td>Roles are assigned but not active - user must "activate" with justification and optional approval</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Microsoft Graph PowerShell</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Replaces the deprecated AzureAD and MSOnline modules. Install: <code>Install-Module Microsoft.Graph -Scope CurrentUser</code></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Connect-MgGraph -Scopes "User.Read.All","Group.ReadWrite.All"</code><button class="copy-btn">copy</button></td><td>Authenticate to Microsoft Graph - specify only the scopes you need</td></tr>
+          <tr><td class="copyable"><code>Get-MgUser -UserId jsmith@contoso.com -Property *</code><button class="copy-btn">copy</button></td><td>Full user object including last sign-in, assigned licenses, account status</td></tr>
+          <tr><td class="copyable"><code>Get-MgUser -Filter "accountEnabled eq false"</code><button class="copy-btn">copy</button></td><td>All disabled accounts in the tenant</td></tr>
+          <tr><td class="copyable"><code>Update-MgUser -UserId jsmith@contoso.com -AccountEnabled $false</code><button class="copy-btn">copy</button></td><td>Disable a user account</td></tr>
+          <tr><td class="copyable"><code>Get-MgGroup -Filter "displayName eq 'VPN Users'"</code><button class="copy-btn">copy</button></td><td>Find a group by display name</td></tr>
+          <tr><td class="copyable"><code>Get-MgGroupMember -GroupId &lt;GroupId&gt;</code><button class="copy-btn">copy</button></td><td>List all members of a group</td></tr>
+          <tr><td class="copyable"><code>New-MgGroupMember -GroupId &lt;GroupId&gt; -DirectoryObjectId &lt;UserId&gt;</code><button class="copy-btn">copy</button></td><td>Add a user to a group</td></tr>
+          <tr><td class="copyable"><code>Get-MgUserAuthenticationMethod -UserId jsmith@contoso.com</code><button class="copy-btn">copy</button></td><td>List registered MFA methods for a user</td></tr>
+          <tr><td class="copyable"><code>Get-MgAuditLogSignIn -Filter "userPrincipalName eq 'jsmith@contoso.com'" -Top 20</code><button class="copy-btn">copy</button></td><td>Recent sign-in activity for a user including location, device, and result</td></tr>
+          <tr><td class="copyable"><code>Get-MgSubscribedSku</code><button class="copy-btn">copy</button></td><td>All M365 license SKUs in the tenant with consumed vs available counts</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Entra Connect (AD Sync)</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Run on the Entra Connect server. Requires the ADSync module (installed automatically with Entra Connect).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Start-ADSyncSyncCycle -PolicyType Delta</code><button class="copy-btn">copy</button></td><td>Sync only changes since the last cycle - fast, use this for most manual syncs</td></tr>
+          <tr><td class="copyable"><code>Start-ADSyncSyncCycle -PolicyType Initial</code><button class="copy-btn">copy</button></td><td>Full sync of all objects - slower, use after major AD changes or connector reconfiguration</td></tr>
+          <tr><td class="copyable"><code>Get-ADSyncScheduler</code><button class="copy-btn">copy</button></td><td>Show sync schedule, next run time, and whether sync is enabled</td></tr>
+          <tr><td class="copyable"><code>Set-ADSyncScheduler -SyncCycleEnabled $false</code><button class="copy-btn">copy</button></td><td>Pause automatic sync cycles - useful during maintenance or bulk AD changes</td></tr>
+          <tr><td class="copyable"><code>Get-ADSyncConnectorRunStatus</code><button class="copy-btn">copy</button></td><td>Check if a sync cycle is currently running before triggering a manual one</td></tr>
+          <tr><td class="copyable"><code>Export-ADSyncToolsHybridAadJoinReport</code><button class="copy-btn">copy</button></td><td>Report on Hybrid Azure AD Join status for domain-joined devices</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Exchange Online Essentials</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Install: <code>Install-Module ExchangeOnlineManagement</code> then <code>Connect-ExchangeOnline</code></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Get-Mailbox -Identity jsmith</code><button class="copy-btn">copy</button></td><td>Mailbox details - type, quota, forwarding, aliases</td></tr>
+          <tr><td class="copyable"><code>Get-Mailbox -RecipientTypeDetails SharedMailbox</code><button class="copy-btn">copy</button></td><td>List all shared mailboxes in the org</td></tr>
+          <tr><td class="copyable"><code>Add-MailboxPermission -Identity shared@ -User jsmith -AccessRights FullAccess</code><button class="copy-btn">copy</button></td><td>Grant full access to a shared mailbox</td></tr>
+          <tr><td class="copyable"><code>Get-MessageTrace -SenderAddress user@contoso.com -StartDate (Get-Date).AddDays(-2)</code><button class="copy-btn">copy</button></td><td>Trace sent mail - check delivery status, routing, spam filtering decisions</td></tr>
+          <tr><td class="copyable"><code>Set-Mailbox -Identity jsmith -ForwardingSmtpAddress "" -DeliverToMailboxAndForward $false</code><button class="copy-btn">copy</button></td><td>Remove email forwarding - check all mailboxes for unauthorised forwarding</td></tr>
+          <tr><td class="copyable"><code>Get-Mailbox -ResultSize Unlimited | Where {$_.ForwardingSmtpAddress -ne $null}</code><button class="copy-btn">copy</button></td><td>Audit all mailboxes with forwarding configured - security check</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Intune / Endpoint Manager</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Concept</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Enrollment</td><td>How devices join Intune - Autopilot (new devices), MDM enrollment (existing), or BYOD via Company Portal</td></tr>
+          <tr><td>Compliance Policy</td><td>Rules a device must meet (encrypted, PIN, OS version) - non-compliant devices can be blocked by Conditional Access</td></tr>
+          <tr><td>Configuration Profile</td><td>Push settings to devices - WiFi, VPN, certificates, restrictions, BitLocker enforcement</td></tr>
+          <tr><td>App Protection Policy</td><td>MAM - protect org data in apps without full device enrolment (BYOD scenario)</td></tr>
+          <tr><td>Autopilot</td><td>Zero-touch Windows provisioning - device ships to user, they sign in, Intune does the rest</td></tr>
+          <tr><td>Device Actions</td><td>Remote wipe, sync, restart, BitLocker key rotation - available per device in Intune portal</td></tr>
+          <tr><td>Scope Tags</td><td>RBAC for Intune - limit what admins can see and manage to their region or team</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- ⑪ RESOURCES & TOOLS ─────────────────────── -->
   <section class="section" id="resources" style="--sec-color:var(--res)">
     <div class="section-header">
-      <span class="section-num">⑪</span>
+      <span class="section-num">⑫</span>
       <h2>Resources &amp; Tools</h2>
       <p>Communities · Core tools · Diagnostics</p>
     </div>
@@ -1562,17 +1976,18 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
         <thead><tr><th>Tool</th><th>URL / Source</th><th>What it Does</th></tr></thead>
         <tbody>
           <tr><td>MX Toolbox</td><td><a href="https://mxtoolbox.com" target="_blank">mxtoolbox.com</a></td><td>DNS, mail, SPF / DMARC / DKIM checks in one place</td></tr>
-          <tr><td>Sysinternals Suite</td><td>Microsoft / learn.microsoft.com</td><td>Windows diagnostics &amp; troubleshooting (Process Monitor, Autoruns, TCPView…)</td></tr>
-          <tr><td>PuTTY</td><td>putty.org</td><td>SSH, Telnet, serial - still essential for Cisco and console work</td></tr>
-          <tr><td>WinSCP</td><td>winscp.net</td><td>Fast file transfer over FTP / SFTP / SSH with GUI</td></tr>
-          <tr><td>Angry IP Scanner / Advanced IP Scanner</td><td>angryip.org</td><td>Quick network sweeps - host discovery and port scan</td></tr>
-
-          <tr><td>WinDbg</td><td>Microsoft Store / WDK</td><td>Windows kernel and crash dump debugging</td></tr>
-          <tr><td>Wireshark</td><td>wireshark.org</td><td>Packet capture and deep protocol analysis</td></tr>
-          <tr><td>Rufus</td><td>rufus.ie</td><td>Write bootable USB images (ISO → USB) on Windows</td></tr>
-          <tr><td>Nmap</td><td>nmap.org</td><td>Network scanning, host discovery, OS fingerprinting, port enumeration</td></tr>
-          <tr><td>OpenSSL</td><td>openssl.org</td><td>TLS, certificate generation, cert inspection, and crypto utilities</td></tr>
-          <tr><td>Git</td><td>git-scm.com</td><td>Version control for scripts, configs, and infrastructure-as-code</td></tr>
+          <tr><td>Sysinternals Suite</td><td><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite" target="_blank">learn.microsoft.com</a></td><td>Windows diagnostics &amp; troubleshooting (Process Monitor, Autoruns, TCPView…)</td></tr>
+          <tr><td>PuTTY</td><td><a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" target="_blank">chiark.greenend.org.uk</a></td><td>SSH, Telnet, serial - still essential for Cisco and console work</td></tr>
+          <tr><td>WinSCP</td><td><a href="https://winscp.net" target="_blank">winscp.net</a></td><td>Fast file transfer over FTP / SFTP / SSH with GUI</td></tr>
+          <tr><td>Angry IP Scanner</td><td><a href="https://angryip.org" target="_blank">angryip.org</a></td><td>Quick network sweeps - host discovery and port scan</td></tr>
+          <tr><td>WinDbg</td><td><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/" target="_blank">learn.microsoft.com</a></td><td>Windows kernel and crash dump debugging</td></tr>
+          <tr><td>Wireshark</td><td><a href="https://www.wireshark.org" target="_blank">wireshark.org</a></td><td>Packet capture and deep protocol analysis</td></tr>
+          <tr><td>Rufus</td><td><a href="https://rufus.ie" target="_blank">rufus.ie</a></td><td>Write bootable USB images (ISO to USB) on Windows</td></tr>
+          <tr><td>Nmap</td><td><a href="https://nmap.org" target="_blank">nmap.org</a></td><td>Network scanning, host discovery, OS fingerprinting, port enumeration</td></tr>
+          <tr><td>OpenSSL</td><td><a href="https://www.openssl.org" target="_blank">openssl.org</a></td><td>TLS, certificate generation, cert inspection, and crypto utilities</td></tr>
+          <tr><td>Git</td><td><a href="https://git-scm.com" target="_blank">git-scm.com</a></td><td>Version control for scripts, configs, and infrastructure-as-code</td></tr>
+          <tr><td>M365 Maps</td><td><a href="https://m365maps.com" target="_blank">m365maps.com</a></td><td>Visual map of M365 service dependencies and license feature inclusions</td></tr>
+          <tr><td>cmd.ms</td><td><a href="https://cmd.ms" target="_blank">cmd.ms</a></td><td>Shortcut directory for Microsoft admin portals - cmd.ms/intune, cmd.ms/aad, etc.</td></tr>
           <tr><td>Crontab Guru</td><td><a href="https://crontab.guru" target="_blank">crontab.guru</a></td><td>Cron expression editor and validator - instant visual feedback</td></tr>
           <tr><td>cheat.sh</td><td><a href="https://cheat.sh" target="_blank">cheat.sh</a></td><td>Instant CLI cheatsheets from the terminal: <code>curl cheat.sh/tar</code></td></tr>
           <tr><td>End-of-Life Info</td><td><a href="https://endoflife.date" target="_blank">endoflife.date</a></td><td>Support and EoL timelines for OS, runtimes, databases, and tools</td></tr>
@@ -1600,28 +2015,22 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
 </div>
 
 <script>
-// ── Mobile sidebar toggle ────────────────────────
-const hamburger = document.getElementById('hamburger');
-const sidebar   = document.querySelector('.sidebar');
-const overlay   = document.getElementById('sidebar-overlay');
-
-function toggleSidebar(open) {
-  sidebar.classList.toggle('open', open);
-  hamburger.classList.toggle('open', open);
-  overlay.classList.toggle('visible', open);
+// ── Mobile menu toggle ──────────────────────────
+const sidebar    = document.querySelector('.sidebar');
+const menuToggle = document.getElementById('menu-toggle');
+if (menuToggle) {
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    menuToggle.querySelector('svg').style.transform =
+      sidebar.classList.contains('open') ? 'rotate(90deg)' : '';
+  });
+  // Close menu when a nav link is tapped
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => sidebar.classList.remove('open'));
+  });
 }
 
-hamburger.addEventListener('click', () => toggleSidebar(!sidebar.classList.contains('open')));
-overlay.addEventListener('click', () => toggleSidebar(false));
-
-// Close sidebar when a nav link is tapped on mobile
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => {
-    if (window.innerWidth <= 900) toggleSidebar(false);
-  });
-});
-
-
+// ── Theme toggle ────────────────────────────────
 const html = document.documentElement;
 const btn  = document.getElementById('theme-btn');
 const lbl  = document.getElementById('theme-label');
