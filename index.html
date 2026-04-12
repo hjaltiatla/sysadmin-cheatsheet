@@ -544,6 +544,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
   <!-- Hero -->
   <div class="hero">
     <h1>Sysadmin <span>Cheatsheet</span></h1>
+    <p style="font-size:11px;opacity:0.45;margin-top:4px;letter-spacing:.05em">v2026.04 &bull; Last updated April 2026</p>
   </div>
 
   <!-- ① NETWORKING ──────────────────────────── -->
@@ -1132,6 +1133,52 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">netsh</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>netsh interface ip show config</code><button class="copy-btn">copy</button></td><td>Show IP, subnet, gateway, DNS for all adapters</td></tr>
+          <tr><td class="copyable"><code>netsh interface ip set address "Ethernet" static 192.168.1.10 255.255.255.0 192.168.1.1</code><button class="copy-btn">copy</button></td><td>Set a static IP on an adapter</td></tr>
+          <tr><td class="copyable"><code>netsh interface ip set address "Ethernet" dhcp</code><button class="copy-btn">copy</button></td><td>Switch adapter back to DHCP</td></tr>
+          <tr><td class="copyable"><code>netsh interface ip set dns "Ethernet" static 8.8.8.8</code><button class="copy-btn">copy</button></td><td>Set a static DNS server on an adapter</td></tr>
+          <tr><td class="copyable"><code>netsh advfirewall show allprofiles</code><button class="copy-btn">copy</button></td><td>Show firewall state for Domain, Private, and Public profiles</td></tr>
+          <tr><td class="copyable"><code>netsh advfirewall set allprofiles state off</code><button class="copy-btn">copy</button></td><td>Disable Windows Firewall on all profiles (testing only)</td></tr>
+          <tr><td class="copyable"><code>netsh advfirewall firewall show rule name=all</code><button class="copy-btn">copy</button></td><td>List all firewall rules</td></tr>
+          <tr><td class="copyable"><code>netsh int tcp show global</code><button class="copy-btn">copy</button></td><td>Show TCP global settings (chimney, RSS, autotune)</td></tr>
+          <tr><td class="copyable"><code>netsh winhttp show proxy</code><button class="copy-btn">copy</button></td><td>Show system-level WinHTTP proxy settings</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">netsh wlan</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>netsh wlan show interfaces</code><button class="copy-btn">copy</button></td><td>Show wireless adapter status, SSID, signal, channel</td></tr>
+          <tr><td class="copyable"><code>netsh wlan show profiles</code><button class="copy-btn">copy</button></td><td>List all saved WiFi profiles on the machine</td></tr>
+          <tr><td class="copyable"><code>netsh wlan show profile name="SSID" key=clear</code><button class="copy-btn">copy</button></td><td>Reveal saved WiFi password in plaintext (requires admin)</td></tr>
+          <tr><td class="copyable"><code>netsh wlan connect name="SSID"</code><button class="copy-btn">copy</button></td><td>Connect to a saved WiFi profile by name</td></tr>
+          <tr><td class="copyable"><code>netsh wlan disconnect</code><button class="copy-btn">copy</button></td><td>Disconnect from current wireless network</td></tr>
+          <tr><td class="copyable"><code>netsh wlan export profile folder=C:\WiFi key=clear</code><button class="copy-btn">copy</button></td><td>Export all WiFi profiles with passwords to XML</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">pathping</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>pathping &lt;host&gt;</code><button class="copy-btn">copy</button></td><td>Combined ping + tracert - shows packet loss per hop over time</td></tr>
+          <tr><td class="copyable"><code>pathping -n 25 &lt;host&gt;</code><button class="copy-btn">copy</button></td><td>Faster: 25 samples instead of default 100</td></tr>
+          <tr><td class="copyable"><code>pathping -w 500 &lt;host&gt;</code><button class="copy-btn">copy</button></td><td>Set reply timeout to 500ms (default 3000ms)</td></tr>
+          <tr><td class="copyable"><code>pathping -4 &lt;host&gt;</code><button class="copy-btn">copy</button></td><td>Force IPv4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="sub-heading" style="margin-top:16px">Windows Storage &amp; Services</div>
     <div class="table-wrap">
       <table>
@@ -1149,6 +1196,36 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">robocopy</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /E</code><button class="copy-btn">copy</button></td><td>Copy all files and subdirectories including empty folders</td></tr>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /MIR</code><button class="copy-btn">copy</button></td><td>Mirror source to dest - deletes extras in dest</td></tr>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /E /Z /MT:8 /LOG:C:\copy.log</code><button class="copy-btn">copy</button></td><td>Resume-capable copy, 8 threads, output to log file</td></tr>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /COPYALL /B</code><button class="copy-btn">copy</button></td><td>Copy all attributes, permissions, timestamps (backup mode)</td></tr>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /E /XD "Temp" /XF "*.tmp"</code><button class="copy-btn">copy</button></td><td>Exclude specific directories and file patterns</td></tr>
+          <tr><td class="copyable"><code>robocopy C:\Source D:\Dest /L</code><button class="copy-btn">copy</button></td><td>Dry run - list what would be copied without copying</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">net use</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>net use</code><button class="copy-btn">copy</button></td><td>List all currently mapped network drives</td></tr>
+          <tr><td class="copyable"><code>net use * \\server\share</code><button class="copy-btn">copy</button></td><td>Map share to next available drive letter</td></tr>
+          <tr><td class="copyable"><code>net use Z: \\server\share /user:domain\user /persistent:yes</code><button class="copy-btn">copy</button></td><td>Map drive Z with credentials, survives reboot</td></tr>
+          <tr><td class="copyable"><code>net use Z: /delete</code><button class="copy-btn">copy</button></td><td>Disconnect and remove a mapped drive</td></tr>
+          <tr><td class="copyable"><code>net use * /delete</code><button class="copy-btn">copy</button></td><td>Disconnect all mapped network drives</td></tr>
+          <tr><td class="copyable"><code>net use \\server\share /delete</code><button class="copy-btn">copy</button></td><td>Disconnect a specific UNC share</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="grid-2" style="margin-top:20px">
       <div>
         <div class="sub-heading">RAID Types</div>
@@ -1156,7 +1233,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <table>
             <thead><tr><th>RAID</th><th>Method</th><th>Min Disks</th><th>Fault Tolerance</th></tr></thead>
             <tbody>
-              <tr><td>RAID 0</td><td>Striping</td><td>2</td><td>None — any disk failure = total loss</td></tr>
+              <tr><td>RAID 0</td><td>Striping</td><td>2</td><td>None -any disk failure = total loss</td></tr>
               <tr><td>RAID 1</td><td>Mirroring</td><td>2</td><td>1 disk failure tolerated</td></tr>
               <tr><td>RAID 5</td><td>Stripe + parity</td><td>3</td><td>1 disk failure tolerated</td></tr>
               <tr><td>RAID 6</td><td>Stripe + dual parity</td><td>4</td><td>2 disk failures tolerated</td></tr>
@@ -1171,7 +1248,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <table>
             <thead><tr><th>Type</th><th>What It Backs Up</th><th>Speed</th><th>Restore</th></tr></thead>
             <tbody>
-              <tr><td>Full</td><td>All data every time</td><td>Slowest</td><td>Single set — fastest restore</td></tr>
+              <tr><td>Full</td><td>All data every time</td><td>Slowest</td><td>Single set -fastest restore</td></tr>
               <tr><td>Incremental</td><td>Changes since last backup (any)</td><td>Fastest</td><td>Need all incrementals + last full</td></tr>
               <tr><td>Differential</td><td>Changes since last full only</td><td>Medium</td><td>Last full + latest differential</td></tr>
               <tr><td>Snapshot</td><td>Point-in-time copy (CoW)</td><td>Instant</td><td>Instant rollback, storage overhead</td></tr>
@@ -1184,25 +1261,117 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
     <div class="sub-heading" style="margin-top:20px">Active Directory</div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
         <tbody>
-          <tr><td class="copyable"><code>Get-ADUser -Identity jsmith -Properties *</code><button class="copy-btn">copy</button></td><td>Full user details: last logon, locked status, group membership</td></tr>
-          <tr><td class="copyable"><code>Get-ADUser -Filter {Enabled -eq $true} -Properties LastLogonDate | Where {$_.LastLogonDate -lt (Get-Date).AddDays(-90)}</code><button class="copy-btn">copy</button></td><td>Active accounts with no logon in 90+ days — stale account audit</td></tr>
+          <tr><td class="copyable"><code>Get-ADUser -Identity jsmith -Properties *</code><button class="copy-btn">copy</button></td><td>Full user details: last logon, locked status, groups</td></tr>
+          <tr><td class="copyable"><code>Get-ADUser -Filter {Enabled -eq $true} -Properties LastLogonDate | Where {$_.LastLogonDate -lt (Get-Date).AddDays(-90)}</code><button class="copy-btn">copy</button></td><td>Active accounts with no logon in 90+ days (stale audit)</td></tr>
           <tr><td class="copyable"><code>Set-ADUser -Identity jsmith -Enabled $false</code><button class="copy-btn">copy</button></td><td>Disable a user account</td></tr>
           <tr><td class="copyable"><code>Unlock-ADAccount -Identity jsmith</code><button class="copy-btn">copy</button></td><td>Unlock a locked-out account</td></tr>
           <tr><td class="copyable"><code>Set-ADAccountPassword -Identity jsmith -Reset -NewPassword (ConvertTo-SecureString "P@ssw0rd!" -AsPlainText -Force)</code><button class="copy-btn">copy</button></td><td>Reset a user password from PowerShell</td></tr>
           <tr><td class="copyable"><code>Get-ADGroupMember -Identity "Domain Admins" -Recursive</code><button class="copy-btn">copy</button></td><td>List group members including nested members</td></tr>
           <tr><td class="copyable"><code>Add-ADGroupMember -Identity "VPN Users" -Members jsmith</code><button class="copy-btn">copy</button></td><td>Add a user to a group</td></tr>
-          <tr><td class="copyable"><code>Get-ADComputer -Filter * -Properties LastLogonDate | Sort LastLogonDate</code><button class="copy-btn">copy</button></td><td>All computers sorted by last logon — spot stale machine accounts</td></tr>
+          <tr><td class="copyable"><code>Get-ADComputer -Filter * -Properties LastLogonDate | Sort LastLogonDate</code><button class="copy-btn">copy</button></td><td>All computers sorted by last logon -spot stale machine accounts</td></tr>
           <tr><td class="copyable"><code>Test-ComputerSecureChannel -Repair</code><button class="copy-btn">copy</button></td><td>Fix broken domain trust without removing from domain</td></tr>
-          <tr><td class="copyable"><code>Reset-ComputerMachinePassword</code><button class="copy-btn">copy</button></td><td>Fixes "trust relationship failed" — no domain rejoin needed</td></tr>
+          <tr><td class="copyable"><code>Reset-ComputerMachinePassword</code><button class="copy-btn">copy</button></td><td>Fixes "trust relationship failed" - no domain rejoin needed</td></tr>
           <tr><td class="copyable"><code>gpupdate /force</code><button class="copy-btn">copy</button></td><td>Force immediate Group Policy refresh</td></tr>
           <tr><td class="copyable"><code>gpresult /r</code><button class="copy-btn">copy</button></td><td>Show applied GPOs for current user and computer (RSoP)</td></tr>
           <tr><td class="copyable"><code>dcdiag /test:replications</code><button class="copy-btn">copy</button></td><td>Test AD replication health across domain controllers</td></tr>
-          <tr><td class="copyable"><code>repadmin /replsummary</code><button class="copy-btn">copy</button></td><td>Replication summary — spot failing DC partners quickly</td></tr>
+          <tr><td class="copyable"><code>repadmin /replsummary</code><button class="copy-btn">copy</button></td><td>Replication summary - spot failing DC partners quickly</td></tr>
         </tbody>
       </table>
     </div>
+
+    <div class="sub-heading" style="margin-top:20px">FSMO Roles</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>netdom query fsmo</code><button class="copy-btn">copy</button></td><td>Show all 5 FSMO role holders in one output</td></tr>
+          <tr><td class="copyable"><code>Get-ADDomain | Select PDCEmulator,RIDMaster,InfrastructureMaster</code><button class="copy-btn">copy</button></td><td>Domain-level FSMO roles via PowerShell</td></tr>
+          <tr><td class="copyable"><code>Get-ADForest | Select SchemaMaster,DomainNamingMaster</code><button class="copy-btn">copy</button></td><td>Forest-level FSMO roles via PowerShell</td></tr>
+          <tr><td class="copyable"><code>Move-ADDirectoryServerOperationMasterRole -Identity "DC02" -OperationMasterRole PDCEmulator,RIDMaster,InfrastructureMaster</code><button class="copy-btn">copy</button></td><td>Transfer domain FSMO roles to DC02 (graceful)</td></tr>
+          <tr><td class="copyable"><code>Move-ADDirectoryServerOperationMasterRole -Identity "DC02" -OperationMasterRole SchemaMaster,DomainNamingMaster</code><button class="copy-btn">copy</button></td><td>Transfer forest FSMO roles to DC02</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">Group Policy (gpupdate / gpresult)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>gpupdate /force</code><button class="copy-btn">copy</button></td><td>Force refresh all computer and user policies now</td></tr>
+          <tr><td class="copyable"><code>gpupdate /force /boot</code><button class="copy-btn">copy</button></td><td>Force update and reboot if a policy requires it</td></tr>
+          <tr><td class="copyable"><code>gpupdate /target:computer</code><button class="copy-btn">copy</button></td><td>Refresh computer policy only</td></tr>
+          <tr><td class="copyable"><code>gpupdate /target:user</code><button class="copy-btn">copy</button></td><td>Refresh user policy only</td></tr>
+          <tr><td class="copyable"><code>Invoke-GPUpdate -Computer "PC01" -RandomDelayInMinutes 0</code><button class="copy-btn">copy</button></td><td>Remote GPUpdate via PowerShell (no delay)</td></tr>
+          <tr><td class="copyable"><code>gpresult /r</code><button class="copy-btn">copy</button></td><td>RSoP summary - applied GPOs for current user and computer</td></tr>
+          <tr><td class="copyable"><code>gpresult /h C:\gp-report.html</code><button class="copy-btn">copy</button></td><td>Full HTML report of applied policies - open in browser</td></tr>
+          <tr><td class="copyable"><code>gpresult /scope computer /v</code><button class="copy-btn">copy</button></td><td>Verbose computer policy details</td></tr>
+          <tr><td class="copyable"><code>gpresult /s PC01 /r</code><button class="copy-btn">copy</button></td><td>RSoP for a remote computer</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px">DC Diagnostics (dcdiag / repadmin)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>dcdiag</code><button class="copy-btn">copy</button></td><td>Run all default DC health tests</td></tr>
+          <tr><td class="copyable"><code>dcdiag /test:replications</code><button class="copy-btn">copy</button></td><td>Test AD replication between DCs</td></tr>
+          <tr><td class="copyable"><code>dcdiag /test:advertising</code><button class="copy-btn">copy</button></td><td>Verify DC is advertising correctly in DNS and AD</td></tr>
+          <tr><td class="copyable"><code>dcdiag /test:netlogons</code><button class="copy-btn">copy</button></td><td>Check Netlogon service and SYSVOL share</td></tr>
+          <tr><td class="copyable"><code>dcdiag /test:dns</code><button class="copy-btn">copy</button></td><td>DNS registration and resolution health check</td></tr>
+          <tr><td class="copyable"><code>dcdiag /s:DC01 /v</code><button class="copy-btn">copy</button></td><td>Full verbose test against a specific DC</td></tr>
+          <tr><td class="copyable"><code>repadmin /showrepl</code><button class="copy-btn">copy</button></td><td>Replication status per naming context and partner DC</td></tr>
+          <tr><td class="copyable"><code>repadmin /syncall /AdeP</code><button class="copy-btn">copy</button></td><td>Force sync all DCs across all partitions</td></tr>
+          <tr><td class="copyable"><code>repadmin /queue</code><button class="copy-btn">copy</button></td><td>Show pending replication queue on local DC</td></tr>
+          <tr><td class="copyable"><code>repadmin /showvector /latency dc=contoso,dc=com</code><button class="copy-btn">copy</button></td><td>Replication latency per DC for a partition</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  <div class="sub-heading" style="margin-top:20px">Windows Server Licensing</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:22%">Edition</th><th style="width:20%">Target</th><th style="width:20%">VM Rights</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Essentials</td><td>≤25 users, ≤50 devices</td><td>0 (host only)</td><td>No CALs required; cannot run as a guest VM; one licence per org</td></tr>
+          <tr><td>Standard</td><td>Most organisations</td><td>2 VMs per licence</td><td>Stack licences to add more VMs (3 licences = 6 VMs on same host)</td></tr>
+          <tr><td>Datacenter</td><td>Dense virtualisation</td><td>Unlimited VMs</td><td>Covers all VMs on the licensed physical host; higher up-front cost</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap" style="margin-top:12px">
+      <table>
+        <thead><tr><th style="width:28%">Licensing Rule</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Core minimum</td><td>Every physical server needs at least <strong>16 core licences</strong> (8 per CPU minimum). Licences sold in 2-core packs.</td></tr>
+          <tr><td>Physical cores only</td><td>Count physical cores, not logical (HT/SMT). A 2-socket 10-core/socket server = 20 cores = 20 core licences needed (but minimum is 16).</td></tr>
+          <tr><td>User CAL</td><td>One CAL per user regardless of devices used. Cheaper when users have many devices.</td></tr>
+          <tr><td>Device CAL</td><td>One CAL per device regardless of users. Cheaper for shared workstations / shift workers.</td></tr>
+          <tr><td>External Connector</td><td>Covers unlimited external (non-employee) users accessing one server - replaces per-user external CALs.</td></tr>
+          <tr><td>RDS CAL</td><td>Remote Desktop Services requires an RDS CAL <em>in addition</em> to the standard Server CAL. Both must be licensed per user or per device.</td></tr>
+          <tr><td>Software Assurance (SA)</td><td>Annual subscription on top of perpetual licence. Grants version upgrade rights, Azure Hybrid Benefit, and licence mobility. Required to stay current without repurchasing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap" style="margin-top:12px">
+      <table>
+        <thead><tr><th style="width:20%">Version</th><th style="width:18%">Release</th><th style="width:18%">End of Support</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Server 2012 R2</td><td>2013</td><td>Oct 2023 (ESU available)</td><td>ESU via Azure Arc through 2026 - migrate off ASAP</td></tr>
+          <tr><td>Server 2016</td><td>2016</td><td>Jan 2027</td><td>First version with core-only licensing (no processor model)</td></tr>
+          <tr><td>Server 2019</td><td>2018</td><td>Jan 2029</td><td>Stable long-term choice; widely deployed</td></tr>
+          <tr><td>Server 2022</td><td>2021</td><td>Oct 2031</td><td>Adds secured-core, TLS 1.3 default, SMB compression</td></tr>
+          <tr><td>Server 2025</td><td>Nov 2024</td><td>Oct 2034</td><td>Hotpatching (no reboot), NVMe/RDMA improvements, SMB over QUIC built-in; same core licensing model as 2022</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;opacity:0.5;margin-top:6px">Source: <a href="https://www.reddit.com/r/sysadmin/wiki/windows_server_licensing/" target="_blank">r/sysadmin wiki</a> · Supplement: Microsoft Docs for Server 2025</p>
 
   </section>
 
@@ -1929,6 +2098,18 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">M365 Security Resources</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resource</th><th>URL</th><th>What it Covers</th></tr></thead>
+        <tbody>
+          <tr><td>CISA SCUBA Project</td><td><a href="https://www.cisa.gov/resources-tools/services/secure-cloud-business-applications-scuba-project" target="_blank">cisa.gov/scuba</a></td><td>Secure configuration baselines for M365 and Teams - free assessment tooling included</td></tr>
+          <tr><td>Compromised Account Checklist</td><td><a href="https://learn.microsoft.com/en-us/defender-office-365/responding-to-a-compromised-email-account" target="_blank">learn.microsoft.com</a></td><td>Microsoft's step-by-step guide for responding to a breached email account</td></tr>
+          <tr><td>O365 Security Best Practices</td><td><a href="https://lazyadmin.nl/office-365/best-practice-to-secure-office-365/" target="_blank">lazyadmin.nl</a></td><td>Practical hardening checklist: MFA, Secure Score, audit logging, anti-phishing policies</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="sub-heading" style="margin-top:20px">Intune / Endpoint Manager</div>
     <div class="table-wrap">
       <table>
@@ -1959,7 +2140,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       <table>
         <thead><tr><th>Resource</th><th>URL / Location</th><th>What it Covers</th></tr></thead>
         <tbody>
-          <tr><td>r/sysadmin · r/linux · r/linuxadmin · r/netsec</td><td>reddit.com</td><td>Community Q&amp;A, incident threads, war stories, tooling discussions</td></tr>
+          <tr><td>r/sysadmin · r/linux · r/linuxadmin · r/netsec</td><td><a href="https://www.reddit.com/r/sysadmin" target="_blank">reddit.com/r/sysadmin</a></td><td>Community Q&amp;A, incident threads, war stories, tooling discussions - wiki includes Windows Server licensing reference</td></tr>
           <tr><td>Brutalist Report</td><td><a href="https://brutalist.report" target="_blank">brutalist.report</a></td><td>Daily tech &amp; security headlines, aggregated and unformatted</td></tr>
           <tr><td>Microsoft Learn</td><td><a href="https://learn.microsoft.com" target="_blank">learn.microsoft.com</a></td><td>Free official docs, learning paths, and certifications for Azure, Windows, and M365</td></tr>
           <tr><td>O'Reilly Topics</td><td><a href="https://oreilly.com/topics" target="_blank">oreilly.com/topics</a></td><td>Broad technical learning - books, videos, courses</td></tr>
@@ -1988,6 +2169,9 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>Git</td><td><a href="https://git-scm.com" target="_blank">git-scm.com</a></td><td>Version control for scripts, configs, and infrastructure-as-code</td></tr>
           <tr><td>M365 Maps</td><td><a href="https://m365maps.com" target="_blank">m365maps.com</a></td><td>Visual map of M365 service dependencies and license feature inclusions</td></tr>
           <tr><td>cmd.ms</td><td><a href="https://cmd.ms" target="_blank">cmd.ms</a></td><td>Shortcut directory for Microsoft admin portals - cmd.ms/intune, cmd.ms/aad, etc.</td></tr>
+          <tr><td>KeePass</td><td><a href="https://keepass.info" target="_blank">keepass.info</a></td><td>Open-source local password manager - encrypted vault, portable, no cloud required</td></tr>
+          <tr><td>Bitwarden</td><td><a href="https://bitwarden.com" target="_blank">bitwarden.com</a></td><td>Open-source cloud password manager - self-hostable, browser extensions, team vaults</td></tr>
+          <tr><td>JAMF Pro</td><td><a href="https://www.jamf.com" target="_blank">jamf.com</a></td><td>MDM for Apple endpoints - config profiles, policies, app deployment, and Autopilot-equivalent for macOS</td></tr>
           <tr><td>Crontab Guru</td><td><a href="https://crontab.guru" target="_blank">crontab.guru</a></td><td>Cron expression editor and validator - instant visual feedback</td></tr>
           <tr><td>cheat.sh</td><td><a href="https://cheat.sh" target="_blank">cheat.sh</a></td><td>Instant CLI cheatsheets from the terminal: <code>curl cheat.sh/tar</code></td></tr>
           <tr><td>End-of-Life Info</td><td><a href="https://endoflife.date" target="_blank">endoflife.date</a></td><td>Support and EoL timelines for OS, runtimes, databases, and tools</td></tr>
@@ -2004,6 +2188,10 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>Cloudflare Speed Test</td><td><a href="https://speed.cloudflare.com" target="_blank">speed.cloudflare.com</a></td><td>Clean download / upload / latency test - no ads, no Flash</td></tr>
           <tr><td>VirusTotal</td><td><a href="https://virustotal.com" target="_blank">virustotal.com</a></td><td>Malware and URL scanning across 60+ antivirus engines simultaneously</td></tr>
           <tr><td>ANY.RUN</td><td><a href="https://app.any.run" target="_blank">app.any.run</a></td><td>Interactive sandbox for malware and phishing analysis - watch execution live</td></tr>
+          <tr><td>Shodan</td><td><a href="https://shodan.io" target="_blank">shodan.io</a></td><td>Search engine for internet-exposed devices. Query: <code>org:"YourOrg"</code> or <code>net:"IP/range"</code></td></tr>
+          <tr><td>crt.sh</td><td><a href="https://crt.sh" target="_blank">crt.sh</a></td><td>Certificate Transparency log search - use <code>%.domain.com</code> to enumerate subdomains</td></tr>
+          <tr><td>SSL Labs</td><td><a href="https://ssllabs.com/ssltest" target="_blank">ssllabs.com/ssltest</a></td><td>In-depth TLS/HTTPS grade report. Aim for A+: TLS 1.3, no weak ciphers, HSTS enabled</td></tr>
+          <tr><td>ViewDNS</td><td><a href="https://viewdns.info" target="_blank">viewdns.info</a></td><td>DNS recon toolkit - Reverse IP Lookup reveals all sites sharing a server</td></tr>
         </tbody>
       </table>
     </div>
