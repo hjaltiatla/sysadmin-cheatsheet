@@ -6,7 +6,7 @@ A single-page reference covering the core knowledge needed for day-to-day sysadm
 
 ## What's inside
 
-- Networking fundamentals — OSI model, DNS, DHCP, protocols
+- Networking fundamentals - OSI model, DNS, DHCP, protocols
 - CIDR & subnetting
 - Ports & VPN technologies
 - Security - hardening, encryption, common attacks
@@ -16,7 +16,7 @@ A single-page reference covering the core knowledge needed for day-to-day sysadm
 - Certificates & firewall
 - DevOps tools - Docker, Git, CI/CD
 - Network deep dive - Wireshark, routing, VLANs
-- Cloud — AWS and Azure core services
+- Cloud - AWS and Azure core services
 - Resources & tools - communities, utilities, diagnostics
 
 ## Usage
