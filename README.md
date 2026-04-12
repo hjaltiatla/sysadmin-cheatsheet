@@ -9,15 +9,15 @@ A single-page reference covering the core knowledge needed for day-to-day sysadm
 - Networking fundamentals — OSI model, DNS, DHCP, protocols
 - CIDR & subnetting
 - Ports & VPN technologies
-- Security — hardening, encryption, common attacks
-- OS & commands — Linux and Windows/PowerShell
+- Security - hardening, encryption, common attacks
+- OS & commands - Linux and Windows/PowerShell
 - Linux & Windows filesystem hierarchies
 - Logs & monitoring
 - Certificates & firewall
-- DevOps tools — Docker, Git, CI/CD
-- Network deep dive — Wireshark, routing, VLANs
+- DevOps tools - Docker, Git, CI/CD
+- Network deep dive - Wireshark, routing, VLANs
 - Cloud — AWS and Azure core services
-- Resources & tools — communities, utilities, diagnostics
+- Resources & tools - communities, utilities, diagnostics
 
 ## Usage
 
