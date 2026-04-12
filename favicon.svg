@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.2" baseProfile="tiny-ps"
+     viewBox="0 0 500 500" width="500" height="500">
+  <title>hjalti.me</title>
+
+  <!-- Background circle -->
+  <circle cx="250" cy="250" r="250" fill="#0F1B2D"/>
+
+  <!-- Subtle inner ring -->
+  <circle cx="250" cy="250" r="225" fill="none" stroke="#1E3A5F" stroke-width="2"/>
+
+  <!-- Geometric H mark - left vertical bar -->
+  <rect x="145" y="148" width="44" height="204" rx="4" fill="#E8F0FE"/>
+
+  <!-- Geometric H mark - right vertical bar -->
+  <rect x="311" y="148" width="44" height="204" rx="4" fill="#E8F0FE"/>
+
+  <!-- Geometric H mark - crossbar -->
+  <rect x="145" y="228" width="210" height="44" rx="4" fill="#E8F0FE"/>
+
+  <!-- Accent dot - top left -->
+  <circle cx="167" cy="148" r="8" fill="#4F8EF7"/>
+
+  <!-- Accent dot - top right -->
+  <circle cx="333" cy="148" r="8" fill="#4F8EF7"/>
+
+  <!-- Accent dot - bottom left -->
+  <circle cx="167" cy="352" r="8" fill="#4F8EF7"/>
+
+  <!-- Accent dot - bottom right -->
+  <circle cx="333" cy="352" r="8" fill="#4F8EF7"/>
+
+  <!-- Domain label -->
+  <text x="250" y="418"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="28"
+        font-weight="300"
+        letter-spacing="6"
+        text-anchor="middle"
+        fill="#4F8EF7">hjalti.me</text>
+
+  <!-- Fine separator line above label -->
+  <line x1="185" y1="398" x2="315" y2="398" stroke="#1E3A5F" stroke-width="1"/>
+
+</svg>
