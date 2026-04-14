@@ -2083,6 +2083,26 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">DSREGCMD - Device Join Status <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/nt/dsregcmd.html" target="_blank" style="color:var(--text3)">ss64.com/nt/dsregcmd</a></span></div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Run from an elevated CMD or PowerShell on the device being diagnosed. Key output fields: <code>AzureAdJoined</code> · <code>DomainJoined</code> · <code>WorkplaceJoined</code> · <code>DeviceId</code> · <code>TenantName</code></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th style="width:35%">Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>dsregcmd /status</code><button class="copy-btn">copy</button></td><td>Show device join state - first check for Hybrid/Entra join issues</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /status_old</code><button class="copy-btn">copy</button></td><td>Legacy format output - useful for scripting or older tooling</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /join</code><button class="copy-btn">copy</button></td><td>Schedule and trigger the Hybrid Azure AD Join autojoin task</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /leave</code><button class="copy-btn">copy</button></td><td>Hybrid unjoin - removes the device record from Entra ID</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /refreshprt</code><button class="copy-btn">copy</button></td><td>Refresh the Primary Refresh Token (PRT) in the CloudAP cache - fixes SSO issues</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /forcerecovery</code><button class="copy-btn">copy</button></td><td>Force sign-out and sign-in cycle to recover a broken Entra ID device state</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /debug /refreshprt</code><button class="copy-btn">copy</button></td><td>Refresh PRT with verbose debug output - useful when PRT refresh silently fails</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /UpdateDevice</code><button class="copy-btn">copy</button></td><td>Sync device attributes to Entra ID (Windows 11+) - use after hardware or name changes</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /listaccounts</code><button class="copy-btn">copy</button></td><td>List all WAM (Web Account Manager) accounts cached on the device (Windows 11+)</td></tr>
+          <tr><td class="copyable"><code>dsregcmd /cleanupaccounts</code><button class="copy-btn">copy</button></td><td>Delete all WAM accounts on the device (Windows 11+) - resets cached token state</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="sub-heading" style="margin-top:20px">Exchange Online Essentials</div>
     <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Install: <code>Install-Module ExchangeOnlineManagement</code> then <code>Connect-ExchangeOnline</code></p>
     <div class="table-wrap">
@@ -2146,7 +2166,7 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>Microsoft Learn</td><td><a href="https://learn.microsoft.com" target="_blank">learn.microsoft.com</a></td><td>Free official docs, learning paths, and certifications for Azure, Windows, and M365</td></tr>
           <tr><td>O'Reilly Topics</td><td><a href="https://oreilly.com/topics" target="_blank">oreilly.com/topics</a></td><td>Broad technical learning - books, videos, courses</td></tr>
           <tr><td>Ask Ubuntu</td><td><a href="https://askubuntu.com" target="_blank">askubuntu.com</a></td><td>Ubuntu-focused Q&amp;A, highly indexed by search engines</td></tr>
-          <tr><td>DigitalOcean Tutorials</td><td><a href="https://digitalocean.com" target="_blank">digitalocean.com</a></td><td>Clear, practical guides for Linux, OSS, and infra topics</td></tr>
+          <tr><td>DigitalOcean Tutorials</td><td><a href="https://www.digitalocean.com/community/tutorials" target="_blank">digitalocean.com/community/tutorials</a></td><td>Clear, practical guides for Linux, OSS, and infra topics</td></tr>
           <tr><td>ServerFault</td><td><a href="https://serverfault.com" target="_blank">serverfault.com</a></td><td>Stack Exchange for professional sysadmins and network engineers</td></tr>
         </tbody>
       </table>
@@ -2173,6 +2193,10 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>KeePass</td><td><a href="https://keepass.info" target="_blank">keepass.info</a></td><td>Open-source local password manager - encrypted vault, portable, no cloud required</td></tr>
           <tr><td>Bitwarden</td><td><a href="https://bitwarden.com" target="_blank">bitwarden.com</a></td><td>Open-source cloud password manager - self-hostable, browser extensions, team vaults</td></tr>
           <tr><td>JAMF Pro</td><td><a href="https://www.jamf.com" target="_blank">jamf.com</a></td><td>MDM for Apple endpoints - config profiles, policies, app deployment, and Autopilot-equivalent for macOS</td></tr>
+          <tr><td>PowerToys</td><td><a href="https://learn.microsoft.com/en-us/windows/powertoys/" target="_blank">learn.microsoft.com</a></td><td>Microsoft utility suite - FancyZones, PowerRename, Run launcher, keyboard remapping, and more</td></tr>
+          <tr><td>Winget</td><td><a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/" target="_blank">learn.microsoft.com</a></td><td>Windows package manager - install, update, and uninstall apps from CLI: <code>winget install vscode</code></td></tr>
+          <tr><td>VS Code</td><td><a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></td><td>Lightweight editor with extensions for PS, Python, SSH remoting, Git, and infra-as-code</td></tr>
+          <tr><td>XCA</td><td><a href="https://www.hohnstaedt.de/xca" target="_blank">hohnstaedt.de/xca</a></td><td>GUI for creating and managing X.509 certs, CAs, and keys - no OpenSSL CLI needed</td></tr>
           <tr><td>Crontab Guru</td><td><a href="https://crontab.guru" target="_blank">crontab.guru</a></td><td>Cron expression editor and validator - instant visual feedback</td></tr>
           <tr><td>cheat.sh</td><td><a href="https://cheat.sh" target="_blank">cheat.sh</a></td><td>Instant CLI cheatsheets from the terminal: <code>curl cheat.sh/tar</code></td></tr>
           <tr><td>End-of-Life Info</td><td><a href="https://endoflife.date" target="_blank">endoflife.date</a></td><td>Support and EoL timelines for OS, runtimes, databases, and tools</td></tr>
@@ -2193,6 +2217,15 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
           <tr><td>crt.sh</td><td><a href="https://crt.sh" target="_blank">crt.sh</a></td><td>Certificate Transparency log search - use <code>%.domain.com</code> to enumerate subdomains</td></tr>
           <tr><td>SSL Labs</td><td><a href="https://ssllabs.com/ssltest" target="_blank">ssllabs.com/ssltest</a></td><td>In-depth TLS/HTTPS grade report. Aim for A+: TLS 1.3, no weak ciphers, HSTS enabled</td></tr>
           <tr><td>ViewDNS</td><td><a href="https://viewdns.info" target="_blank">viewdns.info</a></td><td>DNS recon toolkit - Reverse IP Lookup reveals all sites sharing a server</td></tr>
+          <tr><td>URL Redirect Checker</td><td><a href="https://wheregoes.com" target="_blank">wheregoes.com</a></td><td>Trace full redirect chain for any URL - useful for phishing analysis and link audits</td></tr>
+          <tr><td>Talos Intelligence</td><td><a href="https://talosintelligence.com" target="_blank">talosintelligence.com</a></td><td>Cisco IP/domain reputation lookup - better for email and infra context than VirusTotal</td></tr>
+          <tr><td>web-check.xyz</td><td><a href="https://web-check.xyz" target="_blank">web-check.xyz</a></td><td>All-in-one site recon - headers, DNS, certs, open ports, and redirects in one view</td></tr>
+          <tr><td>DNS Dumpster</td><td><a href="https://dnsdumpster.com" target="_blank">dnsdumpster.com</a></td><td>DNS recon and subdomain mapping - audit your own external exposure</td></tr>
+          <tr><td>BGP Toolkit</td><td><a href="https://bgp.tools" target="_blank">bgp.tools</a></td><td>Search by ASN (AS13335), prefix (8.8.8.0/24), DNS, or MAC address for routing intel</td></tr>
+          <tr><td>AbuseIPDB</td><td><a href="https://abuseipdb.com" target="_blank">abuseipdb.com</a></td><td>IP reputation check - run before whitelisting or investigating suspicious traffic</td></tr>
+          <tr><td>Have I Been Pwned</td><td><a href="https://haveibeenpwned.com" target="_blank">haveibeenpwned.com</a></td><td>Credential breach lookup by email or domain - monitor org exposure</td></tr>
+          <tr><td>Global Ping</td><td><a href="https://globalping.io" target="_blank">globalping.io</a></td><td>Ping, traceroute, and DNS lookup from 50+ global vantage points simultaneously</td></tr>
+          <tr><td>IPLeak</td><td><a href="https://ipleak.net" target="_blank">ipleak.net</a></td><td>VPN, DNS, and WebRTC leak verification - confirm VPN is working as expected</td></tr>
         </tbody>
       </table>
     </div>
