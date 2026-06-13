@@ -1067,6 +1067,112 @@ td.copyable .copy-btn.copied { color:#059669; border-color:#059669 }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">Windows Run Commands <span style="font-size:11px;font-weight:400;color:var(--text3)">- .msc / .cpl / shell: · Reference: <a href="https://ss64.com/nt/" target="_blank" style="color:var(--text3)">ss64.com/nt</a></span></div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">All commands work from Win+R, CMD, or PowerShell. Click any command to copy.</p>
+
+    <div class="sub-heading" style="margin-top:14px;font-size:12px">MMC Consoles &amp; System Tools</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Opens</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>compmgmt.msc</code><button class="copy-btn">copy</button></td><td>Computer Management - one console for most of the tools below</td></tr>
+          <tr><td class="copyable"><code>devmgmt.msc</code><button class="copy-btn">copy</button></td><td>Device Manager</td></tr>
+          <tr><td class="copyable"><code>diskmgmt.msc</code><button class="copy-btn">copy</button></td><td>Disk Management</td></tr>
+          <tr><td class="copyable"><code>eventvwr.msc</code><button class="copy-btn">copy</button></td><td>Event Viewer</td></tr>
+          <tr><td class="copyable"><code>services.msc</code><button class="copy-btn">copy</button></td><td>Services</td></tr>
+          <tr><td class="copyable"><code>taskschd.msc</code><button class="copy-btn">copy</button></td><td>Task Scheduler</td></tr>
+          <tr><td class="copyable"><code>lusrmgr.msc</code><button class="copy-btn">copy</button></td><td>Local Users and Groups (not on Home editions)</td></tr>
+          <tr><td class="copyable"><code>fsmgmt.msc</code><button class="copy-btn">copy</button></td><td>Shared Folders - open files, sessions, shares</td></tr>
+          <tr><td class="copyable"><code>wf.msc</code><button class="copy-btn">copy</button></td><td>Windows Firewall with Advanced Security</td></tr>
+          <tr><td class="copyable"><code>secpol.msc</code><button class="copy-btn">copy</button></td><td>Local Security Policy (not on Home editions)</td></tr>
+          <tr><td class="copyable"><code>gpedit.msc</code><button class="copy-btn">copy</button></td><td>Local Group Policy Editor (not on Home editions)</td></tr>
+          <tr><td class="copyable"><code>rsop.msc</code><button class="copy-btn">copy</button></td><td>Resultant Set of Policy - GUI gpresult</td></tr>
+          <tr><td class="copyable"><code>certlm.msc</code><button class="copy-btn">copy</button></td><td>Certificates - Local Machine</td></tr>
+          <tr><td class="copyable"><code>certmgr.msc</code><button class="copy-btn">copy</button></td><td>Certificates - Current User</td></tr>
+          <tr><td class="copyable"><code>tpm.msc</code><button class="copy-btn">copy</button></td><td>TPM Management - BitLocker prereq checks</td></tr>
+          <tr><td class="copyable"><code>printmanagement.msc</code><button class="copy-btn">copy</button></td><td>Print Management - all printers, drivers, queues</td></tr>
+          <tr><td class="copyable"><code>perfmon</code><button class="copy-btn">copy</button></td><td>Performance Monitor</td></tr>
+          <tr><td class="copyable"><code>perfmon /rel</code><button class="copy-btn">copy</button></td><td>Reliability Monitor - crash/update timeline</td></tr>
+          <tr><td class="copyable"><code>resmon</code><button class="copy-btn">copy</button></td><td>Resource Monitor</td></tr>
+          <tr><td class="copyable"><code>msinfo32</code><button class="copy-btn">copy</button></td><td>System Information - hardware, drivers, env</td></tr>
+          <tr><td class="copyable"><code>msconfig</code><button class="copy-btn">copy</button></td><td>System Configuration - boot options, safe mode</td></tr>
+          <tr><td class="copyable"><code>regedit</code><button class="copy-btn">copy</button></td><td>Registry Editor</td></tr>
+          <tr><td class="copyable"><code>winver</code><button class="copy-btn">copy</button></td><td>Windows version and build dialog</td></tr>
+          <tr><td class="copyable"><code>optionalfeatures</code><button class="copy-btn">copy</button></td><td>Windows Features on/off</td></tr>
+          <tr><td class="copyable"><code>mstsc</code><button class="copy-btn">copy</button></td><td>RDP client - <code>mstsc /v:host</code> connects directly</td></tr>
+          <tr><td class="copyable"><code>quickassist</code><button class="copy-btn">copy</button></td><td>Remote help session (replaces msra)</td></tr>
+          <tr><td class="copyable"><code>cleanmgr</code><button class="copy-btn">copy</button></td><td>Disk Cleanup</td></tr>
+          <tr><td class="copyable"><code>dfrgui</code><button class="copy-btn">copy</button></td><td>Defrag / Optimize Drives</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px;font-size:12px">Control Panel Applets (.cpl)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Opens</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>appwiz.cpl</code><button class="copy-btn">copy</button></td><td>Programs and Features (Add/Remove Programs)</td></tr>
+          <tr><td class="copyable"><code>sysdm.cpl</code><button class="copy-btn">copy</button></td><td>System Properties - domain join, hostname, profiles, env vars</td></tr>
+          <tr><td class="copyable"><code>ncpa.cpl</code><button class="copy-btn">copy</button></td><td>Network Connections (adapters)</td></tr>
+          <tr><td class="copyable"><code>firewall.cpl</code><button class="copy-btn">copy</button></td><td>Windows Firewall basic view (wf.msc for advanced)</td></tr>
+          <tr><td class="copyable"><code>inetcpl.cpl</code><button class="copy-btn">copy</button></td><td>Internet Options - proxy settings live here</td></tr>
+          <tr><td class="copyable"><code>timedate.cpl</code><button class="copy-btn">copy</button></td><td>Date and Time - NTP tab for Kerberos debugging</td></tr>
+          <tr><td class="copyable"><code>powercfg.cpl</code><button class="copy-btn">copy</button></td><td>Power Options</td></tr>
+          <tr><td class="copyable"><code>main.cpl</code><button class="copy-btn">copy</button></td><td>Mouse Properties</td></tr>
+          <tr><td class="copyable"><code>mmsys.cpl</code><button class="copy-btn">copy</button></td><td>Sound devices</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px;font-size:12px">Direct Dialog Shortcuts</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Opens</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>netplwiz</code><button class="copy-btn">copy</button></td><td>User Accounts dialog (alias: <code>control userpasswords2</code>)</td></tr>
+          <tr><td class="copyable"><code>SystemPropertiesAdvanced</code><button class="copy-btn">copy</button></td><td>System Properties - Advanced tab (env vars, performance)</td></tr>
+          <tr><td class="copyable"><code>SystemPropertiesRemote</code><button class="copy-btn">copy</button></td><td>System Properties - Remote Desktop settings</td></tr>
+          <tr><td class="copyable"><code>SystemPropertiesComputerName</code><button class="copy-btn">copy</button></td><td>System Properties - hostname / domain join tab</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-heading" style="margin-top:20px;font-size:12px">shell: Shortcuts</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Opens</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>shell:startup</code><button class="copy-btn">copy</button></td><td>User Startup folder</td></tr>
+          <tr><td class="copyable"><code>shell:common startup</code><button class="copy-btn">copy</button></td><td>All Users Startup folder</td></tr>
+          <tr><td class="copyable"><code>shell:sendto</code><button class="copy-btn">copy</button></td><td>Send To menu folder</td></tr>
+          <tr><td class="copyable"><code>shell:AppsFolder</code><button class="copy-btn">copy</button></td><td>All installed applications (incl. Store apps)</td></tr>
+          <tr><td class="copyable"><code>shell:PrintersFolder</code><button class="copy-btn">copy</button></td><td>Printers folder</td></tr>
+          <tr><td class="copyable"><code>shell:RecycleBinFolder</code><button class="copy-btn">copy</button></td><td>Recycle Bin</td></tr>
+          <tr><td class="copyable"><code>shell:Profile</code><button class="copy-btn">copy</button></td><td>Current user profile folder</td></tr>
+          <tr><td class="copyable"><code>%temp%</code><button class="copy-btn">copy</button></td><td>User temp folder (works directly in Run)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--text3);margin:6px 0 8px 4px;"><strong style="color:var(--text2)">God Mode:</strong> create a folder named <code>GodMode.{ED7BA470-8E54-465E-825C-99712043E26C}</code> - every Control Panel task in a single view.</p>
+
+    <div class="sub-heading" style="margin-top:20px;font-size:12px">RSAT / Server Consoles</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Requires RSAT features installed (or run on a server): <code>Add-WindowsCapability -Online -Name Rsat.ActiveDirectory*</code></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Command</th><th>Opens</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>dsa.msc</code><button class="copy-btn">copy</button></td><td>Active Directory Users and Computers</td></tr>
+          <tr><td class="copyable"><code>gpmc.msc</code><button class="copy-btn">copy</button></td><td>Group Policy Management Console</td></tr>
+          <tr><td class="copyable"><code>dnsmgmt.msc</code><button class="copy-btn">copy</button></td><td>DNS Manager</td></tr>
+          <tr><td class="copyable"><code>dhcpmgmt.msc</code><button class="copy-btn">copy</button></td><td>DHCP Manager</td></tr>
+          <tr><td class="copyable"><code>dssite.msc</code><button class="copy-btn">copy</button></td><td>AD Sites and Services</td></tr>
+          <tr><td class="copyable"><code>adsiedit.msc</code><button class="copy-btn">copy</button></td><td>ADSI Edit - raw directory attributes</td></tr>
+          <tr><td class="copyable"><code>certsrv.msc</code><button class="copy-btn">copy</button></td><td>Certification Authority (AD CS)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="sub-heading" style="margin-top:20px">PowerShell Essentials <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/ps/" target="_blank" style="color:var(--text3)">ss64.com/ps</a></span></div>
     <div class="table-wrap">
       <table>
