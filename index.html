@@ -2297,6 +2297,17 @@ td.copyable .copy-btn.copied { color:var(--accent); border-color:var(--accent) }
         <tbody>
           <tr><td>CISA SCUBA Project</td><td><a href="https://www.cisa.gov/resources-tools/services/secure-cloud-business-applications-scuba-project" target="_blank">cisa.gov/scuba</a></td><td>Secure configuration baselines for M365 and Teams - free assessment tooling included</td></tr>
           <tr><td>Compromised Account Checklist</td><td><a href="https://learn.microsoft.com/en-us/defender-office-365/responding-to-a-compromised-email-account" target="_blank">learn.microsoft.com</a></td><td>Microsoft's step-by-step guide for responding to a breached email account</td></tr>
+          <tr><td>Zero Trust Assessment</td><td><a href="https://github.com/microsoft/zerotrustassessment" target="_blank">github.com/microsoft/zerotrustassessment</a></td><td>Microsoft PowerShell module that scans tenant config and generates an HTML report with security recommendations - demo at <a href="https://aka.ms/zerotrust/demo" target="_blank">aka.ms/zerotrust/demo</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Install-PSResource -Name ZeroTrustAssessment -Scope CurrentUser</code><button class="copy-btn">copy</button></td><td>Install the Zero Trust Assessment module (requires PowerShell 7)</td></tr>
+          <tr><td class="copyable"><code>Connect-ZtAssessment</code><button class="copy-btn">copy</button></td><td>Sign in to the tenant with the required Graph scopes</td></tr>
+          <tr><td class="copyable"><code>Invoke-ZtAssessment</code><button class="copy-btn">copy</button></td><td>Run the assessment and generate the security report for your tenant</td></tr>
         </tbody>
       </table>
     </div>
