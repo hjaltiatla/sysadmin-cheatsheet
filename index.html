@@ -2225,6 +2225,35 @@ td.copyable .copy-btn.copied { color:var(--accent); border-color:var(--accent) }
       </table>
     </div>
 
+    <div class="sub-heading" style="margin-top:20px">Tenant Config Backup &amp; Drift Detection</div>
+    <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Export tenant configuration to files for version control, change history, and drift detection. Run as a scheduled task or DevOps pipeline and commit the output to Git.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>URL / Source</th><th>What it Does</th></tr></thead>
+        <tbody>
+          <tr><td>EntraExporter</td><td><a href="https://github.com/microsoft/EntraExporter" target="_blank">github.com/microsoft/EntraExporter</a></td><td>Exports Entra ID tenant config to local JSON files - users, groups, CA policies, apps, PIM, branding. Lightweight, read-only backup</td></tr>
+          <tr><td>Microsoft365DSC</td><td><a href="https://github.com/Microsoft365DSC/Microsoft365DSC" target="_blank">github.com/Microsoft365DSC</a></td><td>Extracts, deploys, and monitors full M365 tenant config (Entra, EXO, Intune, Teams, SharePoint) as PowerShell DSC - drift detection and tenant cloning</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead><tr><th>Command</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="copyable"><code>Install-Module EntraExporter</code><button class="copy-btn">copy</button></td><td>Install EntraExporter from the PowerShell Gallery (PowerShell 7+ recommended)</td></tr>
+          <tr><td class="copyable"><code>Connect-EntraExporter</code><button class="copy-btn">copy</button></td><td>Authenticate to the tenant via Microsoft Graph with the required read scopes</td></tr>
+          <tr><td class="copyable"><code>Export-Entra -Path 'C:\EntraBackup\'</code><button class="copy-btn">copy</button></td><td>Export the default config set (policies, settings, CA) to JSON files</td></tr>
+          <tr><td class="copyable"><code>Export-Entra -Path 'C:\EntraBackup\' -All</code><button class="copy-btn">copy</button></td><td>Full export - adds users, groups, applications, service principals, and PIM</td></tr>
+          <tr><td class="copyable"><code>Export-Entra -Path 'C:\EntraBackup\' -Type "ConditionalAccess"</code><button class="copy-btn">copy</button></td><td>Export only Conditional Access policies - other types: Users, Groups, Applications, PIM, Devices…</td></tr>
+          <tr><td class="copyable"><code>Install-Module Microsoft365DSC -Force; Update-M365DSCModule</code><button class="copy-btn">copy</button></td><td>Install Microsoft365DSC and pull its required dependency modules</td></tr>
+          <tr><td class="copyable"><code>Export-M365DSCConfiguration</code><button class="copy-btn">copy</button></td><td>Launch the interactive wizard to extract tenant config as a DSC file</td></tr>
+          <tr><td class="copyable"><code>Export-M365DSCConfiguration -Workloads @("AAD","EXO")</code><button class="copy-btn">copy</button></td><td>Export specific workloads only - e.g. Entra ID and Exchange Online</td></tr>
+          <tr><td class="copyable"><code>Compare-M365DSCConfigurations -Source '.\old.ps1' -Destination '.\new.ps1'</code><button class="copy-btn">copy</button></td><td>Diff two exports - detect config drift or compare tenants</td></tr>
+          <tr><td class="copyable"><code>New-M365DSCDeltaReport -Source '.\old.ps1' -Destination '.\new.ps1' -OutputPath '.\delta.html'</code><button class="copy-btn">copy</button></td><td>Generate an HTML report of differences between two configurations</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="sub-heading" style="margin-top:20px">DSREGCMD - Device Join Status <span style="font-size:11px;font-weight:400;color:var(--text3)">- Reference: <a href="https://ss64.com/nt/dsregcmd.html" target="_blank" style="color:var(--text3)">ss64.com/nt/dsregcmd</a></span></div>
     <p style="font-size:11.5px;color:var(--text3);margin:4px 0 8px 4px;">Run from an elevated CMD or PowerShell on the device being diagnosed. Key output fields: <code>AzureAdJoined</code> · <code>DomainJoined</code> · <code>WorkplaceJoined</code> · <code>DeviceId</code> · <code>TenantName</code></p>
     <div class="table-wrap">
